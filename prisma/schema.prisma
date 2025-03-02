@@ -1,0 +1,335 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  active        Boolean   @default(true)
+  creationDate  DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deleted       Boolean   @default(false)
+  deletedAt     DateTime?
+
+  // Relacionamentos do NextAuth
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+
+  // Relacionamentos de feedback e grupos
+  feedbacks    Feedback[]
+  groups       GroupMember[]
+  invitations  GroupInvitation[]
+  joinRequests GroupJoinRequest[]
+
+  // Campos adicionais
+  createdAt    DateTime       @default(now())
+  Transaction  Transaction[]
+  Group        Group[]
+  Category     Category[]
+  Notification Notification[]
+
+  @@map("users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
+
+model Transaction {
+  id           String          @id @default(cuid())
+  userId       String?
+  groupId      String?
+  categoryId   String?
+  amount       Decimal?
+  creationDate DateTime        @default(now())
+  description  String?
+  type         TransactionType
+  payments     Payment[]
+  receipts     Receipt[]
+  reserves     Reserve[]
+  deleted      Boolean         @default(false)
+  deletedAt    DateTime?
+  user         User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  group        Group?          @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  category     Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("transactions")
+}
+
+model Payment {
+  id            String            @id @default(cuid())
+  transactionId String?
+  dueDate       DateTime
+  amountPaid    Decimal
+  status        PaymentStatus
+  paymentMethod PaymentMethodType
+  transaction   Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Receipt {
+  id             String            @id @default(cuid())
+  transactionId  String?
+  receiptDate    DateTime
+  amountReceived Decimal
+  status         ReceiptStatus
+  receiptMethod  ReceiptMethodType
+  transaction    Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@map("receipts")
+}
+
+model Reserve {
+  id            String        @id @default(cuid())
+  transactionId String?
+  startDate     DateTime
+  endDate       DateTime?
+  yield         Decimal
+  status        ReserveStatus
+  transaction   Transaction?  @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@map("reserves")
+}
+
+model Group {
+  id            String             @id @default(cuid())
+  creatorUserId String
+  name          String
+  tag           String             @unique
+  description   String
+  creationDate  DateTime           @default(now())
+  creator       User               @relation(fields: [creatorUserId], references: [id], onDelete: Cascade)
+  members       GroupMember[]
+  invitations   GroupInvitation[]
+  joinRequests  GroupJoinRequest[]
+  deleted       Boolean            @default(false)
+  deletedAt     DateTime?
+  Category      Category[]
+  visibility    VisibilityType
+  Transaction   Transaction[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id           String   @id @default(cuid())
+  userId       String
+  groupId      String
+  additionDate DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group        Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  role         RoleType
+
+  @@map("group_members")
+}
+
+model GroupInvitation {
+  id         String                @id @default(cuid())
+  groupId    String
+  userId     String
+  sendDate   DateTime
+  acceptDate DateTime?
+  status     GroupInvitationStatus
+  group      Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("group_invitations")
+}
+
+model GroupJoinRequest {
+  id           String                 @id @default(cuid())
+  groupId      String
+  userId       String
+  requestDate  DateTime
+  responseDate DateTime?
+  status       GroupJoinRequestStatus
+  group        Group                  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("group_join_requests")
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String
+  type         CategoryType
+  group        Group?        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  groupId      String?
+  userId       String?
+
+  @@map("categories")
+}
+
+model Feedback {
+  id           String         @id @default(cuid())
+  userId       String
+  message      String
+  creationDate DateTime       @default(now())
+  type         FeedbackType
+  status       FeedbackStatus
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("feedbacks")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+enum CategoryType {
+  RESERVATION
+  PAYMENT
+  RECEIPT
+}
+
+enum GroupJoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum GroupInvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum TransactionType {
+  RESERVATION
+  PAYMENT
+  RECEIPT
+}
+
+enum PaymentMethodType {
+  CARD
+  CASH
+  TRANSFER
+  PIX
+  BOLETO
+  CHECK
+  OTHER
+}
+
+enum ReceiptMethodType {
+  SALARY
+  SALE
+  EXTRA
+  TICKET
+  INVESTMENT
+  DIVIDEND
+  REIMBURSEMENT
+  OTHER
+}
+
+enum FeedbackType {
+  PRAISE
+  SUGGESTION
+  ISSUE
+}
+
+enum FeedbackStatus {
+  UNREAD
+  READ
+}
+
+enum RoleType {
+  ADMIN
+  MEMBER
+}
+
+enum VisibilityType {
+  PUBLIC
+  PRIVATE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum ReceiptStatus {
+  PENDING
+  RECEIVED
+  CANCELLED
+}
+
+enum ReserveStatus {
+  PENDING
+  ACTIVE
+  REDEEMED
+}
