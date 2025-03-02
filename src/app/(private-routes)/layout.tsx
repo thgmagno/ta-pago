@@ -11,7 +11,7 @@ export default async function PrivateLayout({
       <AppSidebar />
       <div className="w-full">
         <SidebarTrigger />
-        <section className="mb-32 p-5">{children}</section>
+        <section className="mb-32 p-3 md:p-5">{children}</section>
       </div>
     </SidebarProvider>
   )

@@ -1,7 +1,13 @@
-export default async function () {
+import { AddReceiptForm } from '@/components/forms/AddReceiptForm'
+import { CardWithForm } from '@/components/forms/CardForm'
+
+export default async function AddReceiptPage() {
   return (
     <section>
-      <p>AddReceiptPage</p>
+      <span>Adicionar recebimento</span>
+      <CardWithForm>
+        <AddReceiptForm />
+      </CardWithForm>
     </section>
   )
 }

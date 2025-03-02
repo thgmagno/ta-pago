@@ -50,7 +50,8 @@ export const columns: ColumnDef<Receipt>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const receipt = row.original
-      const url = `/financas/recebimentos/${receipt.id}`
+      const editUrl = `/financas/recebimentos/${receipt.id}`
+      const detailsUrl = `/financas/recebimentos/detalhes/${receipt.id}`
       const { replace } = useRouter()
 
       return (
@@ -65,10 +66,12 @@ export const columns: ColumnDef<Receipt>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => replace(url)}>
+            <DropdownMenuItem onClick={() => replace(editUrl)}>
               Editar recebimento
             </DropdownMenuItem>
-            <DropdownMenuItem>Visualizar detalhes</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => replace(detailsUrl)}>
+              Visualizar detalhes
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
