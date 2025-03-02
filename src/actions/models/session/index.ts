@@ -1,4 +1,6 @@
-import { auth } from '@/auth'
+'use server'
+
+import { auth, signIn } from '@/auth'
 import { redirect } from 'next/navigation'
 
 type GetServerSessionReturn<T = undefined> = T extends 'id' | 'email' | 'name'
@@ -35,4 +37,8 @@ export async function getServerSession<
     name: user.name ?? 'Sem nome',
     image: user?.image,
   } as GetServerSessionReturn<T>
+}
+
+export async function loginWithGoogle() {
+  return signIn('google')
 }

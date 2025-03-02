@@ -1,7 +1,5 @@
-import { Page } from '@/components/common/Page'
 import { CreditCard, Calendar, Coins } from 'lucide-react'
-import { ItemGrid } from '@/components/grid/ItemGrid'
-import { Grid } from '@/components/grid'
+import Link from 'next/link'
 
 export default function FinancePage() {
   const items = [
@@ -23,12 +21,18 @@ export default function FinancePage() {
   ]
 
   return (
-    <Page>
-      <Grid>
+    <section>
+      <div className="flex flex-col">
         {items.map((item) => (
-          <ItemGrid key={item.title} item={item} />
+          <Link
+            key={item.url}
+            href={item.url}
+            className="hover:text-emerald-500 hover:underline"
+          >
+            {item.title}
+          </Link>
         ))}
-      </Grid>
-    </Page>
+      </div>
+    </section>
   )
 }

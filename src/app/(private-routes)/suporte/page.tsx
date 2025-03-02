@@ -1,9 +1,7 @@
-import { Page } from '@/components/common/Page'
-
-export default function SupportPage() {
+export default function () {
   return (
-    <Page>
-      <></>
-    </Page>
+    <section>
+      <p>SupportPage</p>
+    </section>
   )
 }
