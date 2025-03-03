@@ -20,8 +20,6 @@ export async function getServerSession<
 
   if (!user || !user.email) redirect('/entrar')
 
-  console.log(user)
-
   if (get === 'id') {
     return String(user.id) as GetServerSessionReturn<T>
   }

@@ -13,7 +13,10 @@ export default async function CategoriesPage() {
     <section className="page">
       {/* Categories Payment */}
       <div className="flex items-center justify-between">
-        <span>Categorias de pagamento</span>
+        <span>
+          Categorias de pagamento:{' '}
+          {String(paymentCategories.data?.length ?? 0).padStart(2, '0')}
+        </span>
         <Link
           href="/financas/categorias/adicionar"
           className={buttonVariants({ variant: 'outline', size: 'sm' })}
@@ -25,7 +28,10 @@ export default async function CategoriesPage() {
 
       {/* Categories Receipt */}
       <div className="flex flex-col">
-        <span>Categorias de recebimento</span>
+        <span>
+          Categorias de recebimento:{' '}
+          {String(dict.ReceiptMethods.length ?? 0).padStart(2, '0')}
+        </span>
         <small className="text-muted-foreground mt-2">
           No momento, as categorias de recebimento não podem ser editadas ou
           sobrescritas.

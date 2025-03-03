@@ -34,12 +34,15 @@ export function CategoryForm({
   return (
     <form action={action}>
       <div className="grid w-full items-center gap-4">
+        {/* Tipo */}
+        <Label className="mb-3">Tipo: Pagamento</Label>
+
         {/* Description */}
         <div className="flex flex-col space-y-2">
           <Label>Descrição</Label>
           <Input
             id="description"
-            placeholder="Descrição do pagamento (opcional)"
+            placeholder="Descrição da categoria"
             defaultValue={category?.name ?? ''}
           />
           <ErrorMessageForm message={formState.errors.name} />

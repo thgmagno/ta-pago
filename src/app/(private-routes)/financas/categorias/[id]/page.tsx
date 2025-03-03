@@ -12,7 +12,7 @@ export default async function EditPaymentPage({
 
   return (
     <section>
-      <span>Editar pagamento</span>
+      <span>Editar categoria</span>
       <CardWithForm>
         <EditCategoryForm category={category} />
       </CardWithForm>
