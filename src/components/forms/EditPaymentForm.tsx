@@ -1,23 +1,26 @@
 'use client'
 
-import { Payment } from '@prisma/client'
-import { CardWithFooter } from './CardForm'
+import { Payment, Transaction } from '@prisma/client'
+import { actions } from '@/actions'
+import { useActionState } from 'react'
+import { PaymentForm } from './AddPaymentForm'
 
-export function EditPaymentForm({ payment }: { payment: Payment }) {
-  const isPending = false
+export function EditPaymentForm({
+  transaction,
+}: {
+  transaction?: Transaction & { payment: Payment }
+}) {
+  const [formState, action, isPending] = useActionState(
+    actions.transactions.payment.create,
+    { errors: {} },
+  )
 
   return (
-    <form>
-      <div className="grid w-full items-center gap-4">
-        <div className="flex flex-col space-y-1.5">
-          <label htmlFor="name">EditPayment</label>
-          <input id="name" placeholder={payment.status} />
-        </div>
-      </div>
-      <CardWithFooter
-        onCancelRedirectTo="/financas/pagamentos"
-        isPending={isPending}
-      />
-    </form>
+    <PaymentForm
+      formState={formState}
+      action={action}
+      isPending={isPending}
+      transaction={transaction}
+    />
   )
 }

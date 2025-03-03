@@ -1,23 +1,26 @@
 'use client'
 
-import { Receipt } from '@prisma/client'
-import { CardWithFooter } from './CardForm'
+import { Receipt, Transaction } from '@prisma/client'
+import { actions } from '@/actions'
+import { useActionState } from 'react'
+import { ReceiptForm } from './AddReceiptForm'
 
-export function EditReceiptForm({ receipt }: { receipt: Receipt }) {
-  const isPending = false
+export function EditReceiptForm({
+  transaction,
+}: {
+  transaction?: Transaction & { receipt: Receipt }
+}) {
+  const [formState, action, isPending] = useActionState(
+    actions.transactions.receipt.create,
+    { errors: {} },
+  )
 
   return (
-    <form>
-      <div className="grid w-full items-center gap-4">
-        <div className="flex flex-col space-y-1.5">
-          <label htmlFor="name">EditReceipt</label>
-          <input id="name" placeholder={receipt.status} />
-        </div>
-      </div>
-      <CardWithFooter
-        onCancelRedirectTo="/financas/recebimentos"
-        isPending={isPending}
-      />
-    </form>
+    <ReceiptForm
+      formState={formState}
+      action={action}
+      isPending={isPending}
+      transaction={transaction}
+    />
   )
 }

@@ -1,23 +1,26 @@
 'use client'
 
-import { Reserve } from '@prisma/client'
-import { CardWithFooter } from './CardForm'
+import { Reserve, Transaction } from '@prisma/client'
+import { actions } from '@/actions'
+import { useActionState } from 'react'
+import { ReserveForm } from './AddReserveForm'
 
-export function EditReserveForm({ reserve }: { reserve: Reserve }) {
-  const isPending = false
+export function EditReserveForm({
+  transaction,
+}: {
+  transaction?: Transaction & { reserve: Reserve }
+}) {
+  const [formState, action, isPending] = useActionState(
+    actions.transactions.reserve.create,
+    { errors: {} },
+  )
 
   return (
-    <form>
-      <div className="grid w-full items-center gap-4">
-        <div className="flex flex-col space-y-1.5">
-          <label htmlFor="name">EditReserve</label>
-          <input id="name" placeholder={reserve.status} />
-        </div>
-      </div>
-      <CardWithFooter
-        onCancelRedirectTo="/financas/reservas"
-        isPending={isPending}
-      />
-    </form>
+    <ReserveForm
+      formState={formState}
+      action={action}
+      isPending={isPending}
+      transaction={transaction}
+    />
   )
 }

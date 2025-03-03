@@ -2,8 +2,9 @@ import { z } from 'zod'
 
 // Validação para Payment
 export const PaymentSchema = z.object({
-  dueDate: z.date({ message: 'A data de vencimento é obrigatória' }),
-  amountPaid: z
+  paidAt: z.date({ message: 'A data de pagamento é inválida' }).optional(),
+  scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
+  amount: z
     .string()
     .min(1, { message: 'O valor pago é obrigatório' })
     .refine((val) => !isNaN(Number(val)), {
@@ -21,8 +22,11 @@ export const PaymentSchema = z.object({
 
 // Validação para Receipt
 export const ReceiptSchema = z.object({
-  receiptDate: z.date({ message: 'A data do recibo é obrigatória' }),
-  amountReceived: z
+  receivedAt: z
+    .date({ message: 'A data de recebimento é inválida' })
+    .optional(),
+  scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
+  amount: z
     .string()
     .min(1, { message: 'O valor recebido é obrigatório' })
     .refine((val) => !isNaN(Number(val)), {

@@ -1,13 +1,13 @@
 'use server'
 
 import { ReceiptSchema } from '@/lib/schemas/transactions'
-import { ReceiptFormState } from '@/lib/states/transactions'
+import { ReserveFormState } from '@/lib/states/transactions'
 import { getServerSession } from '@/actions/models/session'
 
 export async function create(
-  formState: ReceiptFormState,
+  formState: ReserveFormState,
   formData: FormData,
-): Promise<ReceiptFormState> {
+): Promise<ReserveFormState> {
   const parsed = ReceiptSchema.safeParse(Object.fromEntries(formData.entries()))
 
   if (!parsed.success) {

@@ -120,8 +120,9 @@ model Transaction {
 model Payment {
   id            String            @id @default(cuid())
   transactionId String?
-  dueDate       DateTime
-  amountPaid    Decimal
+  paidAt        DateTime?
+  scheduledDate DateTime
+  amount        Float
   status        PaymentStatus
   paymentMethod PaymentMethodType
   transaction   Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
@@ -130,13 +131,14 @@ model Payment {
 }
 
 model Receipt {
-  id             String            @id @default(cuid())
-  transactionId  String?
-  receiptDate    DateTime
-  amountReceived Decimal
-  status         ReceiptStatus
-  receiptMethod  ReceiptMethodType
-  transaction    Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  id            String            @id @default(cuid())
+  transactionId String?
+  receivedAt    DateTime?
+  scheduledDate DateTime
+  amount        Float
+  status        ReceiptStatus
+  receiptMethod ReceiptMethodType
+  transaction   Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 
   @@map("receipts")
 }
@@ -146,7 +148,8 @@ model Reserve {
   transactionId String?
   startDate     DateTime
   endDate       DateTime?
-  yield         Decimal
+  amount        Float
+  yield         Float?
   status        ReserveStatus
   transaction   Transaction?  @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 
