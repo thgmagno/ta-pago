@@ -1,3 +1,16 @@
 'use server'
 
-export async function findAll() {}
+import { actions } from '@/actions'
+import { repositories } from '@/database/repositories'
+
+export async function findAll() {
+  const user = await actions.session.getServerSession()
+
+  const paymentCategories = await repositories.categories.category.findAll(
+    'PAYMENT',
+    user.id,
+    '',
+  )
+
+  return { paymentCategories }
+}

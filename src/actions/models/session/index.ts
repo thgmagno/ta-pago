@@ -17,7 +17,7 @@ export async function getServerSession<
 >(get?: T): Promise<GetServerSessionReturn<T>> {
   const user = await auth().then((res) => res?.user)
 
-  if (!user || !user.email || !user.id) redirect('/entrar')
+  if (!user || !user.email) redirect('/entrar')
 
   if (get === 'id') {
     return String(user.id) as GetServerSessionReturn<T>

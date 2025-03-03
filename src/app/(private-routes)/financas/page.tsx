@@ -1,4 +1,4 @@
-import { CreditCard, Calendar, Coins } from 'lucide-react'
+import { CreditCard, Calendar, Coins, Grid2X2Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export default function FinancePage() {
@@ -17,6 +17,11 @@ export default function FinancePage() {
       title: 'Reservas',
       url: '/financas/reservas',
       icon: Calendar,
+    },
+    {
+      title: 'Categorias',
+      url: '/financas/categorias',
+      icon: Grid2X2Plus,
     },
   ]
 

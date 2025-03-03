@@ -24,7 +24,7 @@ export default async function PaymentsPage() {
   const data = await getData()
 
   return (
-    <section>
+    <section className="page">
       <div className="flex items-center justify-between">
         <span>Pagamentos</span>
         <Link

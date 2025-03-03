@@ -9,6 +9,7 @@ import * as receipt from './models/receipt'
 import * as reserve from './models/reserve'
 import * as transaction from './models/transaction'
 import * as user from './models/user'
+import * as session from './models/session'
 
 export const actions = {
   groups: {
@@ -28,4 +29,5 @@ export const actions = {
     feedback,
     user,
   },
+  session,
 }

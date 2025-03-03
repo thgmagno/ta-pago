@@ -8,8 +8,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { usePathname } from 'next/navigation'
-import { loginWithGoogle } from '@/actions/models/session'
 import Image from 'next/image'
+import { actions } from '@/actions'
 
 export function AccessAccount() {
   const pathname = usePathname()
@@ -22,7 +22,7 @@ export function AccessAccount() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-44">
           <DropdownMenuItem
-            onClick={loginWithGoogle}
+            onClick={actions.session.loginWithGoogle}
             className="flex items-center text-sm md:text-base"
           >
             <Image

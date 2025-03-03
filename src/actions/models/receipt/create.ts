@@ -1,8 +1,8 @@
 'use server'
 
+import { actions } from '@/actions'
 import { ReceiptSchema } from '@/lib/schemas/transactions'
 import { ReceiptFormState } from '@/lib/states/transactions'
-import { getServerSession } from '@/actions/models/session'
 
 export async function create(
   formState: ReceiptFormState,
@@ -15,7 +15,7 @@ export async function create(
   }
 
   try {
-    const user = await getServerSession()
+    const user = await actions.session.getServerSession()
 
     const newRecord = {}
   } catch (error) {

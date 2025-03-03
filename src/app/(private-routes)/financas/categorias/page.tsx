@@ -1,0 +1,37 @@
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
+import { DataTable } from '@/components/DataTable'
+import { paymentColumns } from './paymentColumns'
+import { dict } from '@/lib/dict'
+import { receiptColumns } from './receiptColumns'
+import { actions } from '@/actions'
+
+export default async function CategoriesPage() {
+  const { paymentCategories } = await actions.categories.category.findAll()
+
+  return (
+    <section className="page">
+      {/* Categories Payment */}
+      <div className="flex items-center justify-between">
+        <span>Categorias de pagamento</span>
+        <Link
+          href="/financas/categorias/adicionar"
+          className={buttonVariants({ variant: 'outline', size: 'sm' })}
+        >
+          Adicionar
+        </Link>
+      </div>
+      <DataTable columns={paymentColumns} data={paymentCategories.data ?? []} />
+
+      {/* Categories Receipt */}
+      <div className="flex flex-col">
+        <span>Categorias de recebimento</span>
+        <small className="text-muted-foreground mt-2">
+          No momento, as categorias de recebimento não podem ser editadas ou
+          sobrescritas.
+        </small>
+      </div>
+      <DataTable columns={receiptColumns} data={dict.ReceiptMethods} />
+    </section>
+  )
+}
