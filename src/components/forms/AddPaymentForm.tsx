@@ -27,14 +27,6 @@ export function AddPaymentForm() {
     { errors: {} },
   )
 
-  // [X] - description: text
-  // [X] - amount: number
-  // [ ] - categoryId: select
-  // [X] - paidAt: Date
-  // [X] - scheduledDate: Date
-  // [X] - paymentMethod: select
-  // [X] - status: select
-
   return (
     <PaymentForm formState={formState} action={action} isPending={isPending} />
   )
@@ -97,7 +89,26 @@ export function PaymentForm({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex flex-col gap-2 lg:flex-row">
+          {/* categoryId */}
+          <div className="flex flex-1 flex-col space-y-2">
+            <Label>Categoria</Label>
+            <Select
+              name="category"
+              defaultValue={transaction?.categoryId ?? ''}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecionar categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Categorias</SelectLabel>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <ErrorMessageForm message={formState.errors.categoryId} />
+          </div>
+
           {/* paymentMethod */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Método</Label>
