@@ -1,5 +1,5 @@
 import { prisma } from '@/database/prisma'
-import { Reserve, Transaction } from '@prisma/client'
+import { Reserve, ReserveStatus, Transaction } from '@prisma/client'
 import { handleDatabaseOperation } from '@/database/helper'
 
 interface CreateReservation {
@@ -9,16 +9,14 @@ interface CreateReservation {
 }
 
 interface FindAllParameters {
-  orderBy?: string
-  order?: 'asc' | 'desc'
-  creationDateFrom?: Date
-  creationDateTo?: Date
+  order: 'asc' | 'desc'
   startDateFrom?: Date
   startDateTo?: Date
   endDateFrom?: Date
   endDateTo?: Date
   userId?: string
-  groupId?: string
+  groupId?: string | null
+  status?: ReserveStatus
 }
 
 export async function create(params: CreateReservation) {
@@ -86,37 +84,32 @@ export async function findUnique(
 
 export async function findAll(params: FindAllParameters) {
   return handleDatabaseOperation(async () => {
-    return prisma.transaction.findMany({
+    return await prisma.reserve.findMany({
       where: {
-        OR: [{ userId: params.userId }, { groupId: params.groupId }],
-        creationDate: {
-          gte: params.creationDateFrom || undefined,
-          lte: params.creationDateTo || undefined,
+        transaction: {
+          type: 'RESERVATION',
+          OR: [{ userId: params.userId }, { groupId: params.groupId }],
         },
+        startDate: {
+          gte: params.startDateFrom || undefined,
+          lte: params.startDateTo || undefined,
+        },
+        endDate: {
+          gte: params.endDateFrom || undefined,
+          lte: params.endDateTo || undefined,
+        },
+        ...(params.status && { status: { equals: params.status } }),
       },
       include: {
-        reserves: {
-          where: {
-            OR: [
-              {
-                startDate: {
-                  gte: params.startDateFrom || undefined,
-                  lte: params.startDateTo || undefined,
-                },
-                endDate: {
-                  gte: params.endDateFrom || undefined,
-                  lte: params.endDateTo || undefined,
-                },
-              },
-            ],
-          },
+        transaction: {
+          include: { category: { select: { name: true } } },
         },
       },
       orderBy: {
-        [params.orderBy ?? 'description']: params.order ?? 'asc',
+        transaction: { description: 'asc' },
       },
     })
-  }, 'Reservas listadas com sucesso')
+  }, 'Busca realizada com sucesso')
 }
 
 export async function destroy(

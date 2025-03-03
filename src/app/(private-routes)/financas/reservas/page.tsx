@@ -1,27 +1,11 @@
 import { DataTable } from '@/components/DataTable'
-import { columns, Reserve } from './columns'
+import { columns } from './columns'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
+import { actions } from '@/actions'
 
 export default async function ReservesPage() {
-  async function getData(): Promise<Reserve[]> {
-    return [
-      {
-        id: '728ed52f',
-        amount: 800,
-        status: 'pending',
-        category: 'Renda fixa',
-      },
-      {
-        id: '489e1d42',
-        amount: 500,
-        status: 'success',
-        category: 'Fundo Imobiliário',
-      },
-    ]
-  }
-
-  const data = await getData()
+  const transactions = await actions.transactions.reserve.findAll()
 
   return (
     <section className="page">
@@ -34,7 +18,7 @@ export default async function ReservesPage() {
           Adicionar
         </Link>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={transactions.data ?? []} />
     </section>
   )
 }

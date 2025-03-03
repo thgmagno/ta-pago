@@ -1,5 +1,5 @@
 import { prisma } from '@/database/prisma'
-import { Transaction, Payment } from '@prisma/client'
+import { Transaction, Payment, PaymentStatus } from '@prisma/client'
 import { handleDatabaseOperation } from '@/database/helper'
 
 interface CreatePayment {
@@ -8,14 +8,14 @@ interface CreatePayment {
 }
 
 interface FindAllParameters {
-  orderBy: 'description' | 'creationDate' | 'amount'
   order: 'asc' | 'desc'
-  creationDateFrom?: Date
-  creationDateTo?: Date
-  dueDateFrom?: Date
-  dueDateTo?: Date
+  paidAtFrom?: Date
+  paidAtTo?: Date
+  scheduledDateFrom?: Date
+  scheduledDateTo?: Date
   userId?: string
-  groupId?: string
+  groupId?: string | null
+  status?: PaymentStatus
 }
 
 export async function create(params: CreatePayment) {
@@ -115,26 +115,29 @@ export async function findUnique(
 
 export async function findAll(params: FindAllParameters) {
   return handleDatabaseOperation(async () => {
-    return await prisma.transaction.findMany({
+    return prisma.payment.findMany({
       where: {
-        OR: [{ userId: params.userId }, { groupId: params.groupId }],
-        creationDate: {
-          gte: params.creationDateFrom || undefined,
-          lte: params.creationDateTo || undefined,
+        transaction: {
+          type: 'PAYMENT',
+          OR: [{ userId: params.userId }, { groupId: params.groupId }],
         },
+        paidAt: {
+          gte: params.paidAtFrom || undefined,
+          lte: params.paidAtTo || undefined,
+        },
+        scheduledDate: {
+          gte: params.scheduledDateFrom || undefined,
+          lte: params.scheduledDateTo || undefined,
+        },
+        ...(params.status && { status: { equals: params.status } }),
       },
       include: {
-        payments: {
-          where: {
-            dueDate: {
-              gte: params.dueDateFrom || undefined,
-              lte: params.dueDateTo || undefined,
-            },
-          },
+        transaction: {
+          include: { category: { select: { name: true } } },
         },
       },
       orderBy: {
-        [params.orderBy]: params.order,
+        transaction: { description: 'asc' },
       },
     })
   }, 'Busca realizada com sucesso')

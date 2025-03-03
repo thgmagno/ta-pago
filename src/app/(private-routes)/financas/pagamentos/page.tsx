@@ -1,27 +1,13 @@
 import { DataTable } from '@/components/DataTable'
-import { columns, Payment } from './columns'
+import { columns } from './columns'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
+import { actions } from '@/actions'
 
 export default async function PaymentsPage() {
-  async function getData(): Promise<Payment[]> {
-    return [
-      {
-        id: '728ed52f',
-        amount: 100,
-        status: 'pending',
-        category: 'Mercado',
-      },
-      {
-        id: '489e1d42',
-        amount: 125,
-        status: 'processing',
-        category: 'Roupas',
-      },
-    ]
-  }
+  const transactions = await actions.transactions.payment.findAll()
 
-  const data = await getData()
+  console.log(transactions)
 
   return (
     <section className="page">
@@ -34,7 +20,7 @@ export default async function PaymentsPage() {
           Adicionar
         </Link>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={transactions.data ?? []} />
     </section>
   )
 }

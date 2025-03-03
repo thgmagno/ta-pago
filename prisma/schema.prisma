@@ -102,7 +102,6 @@ model Transaction {
   userId       String?
   groupId      String?
   categoryId   String?
-  amount       Decimal?
   creationDate DateTime        @default(now())
   description  String?
   type         TransactionType

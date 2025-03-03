@@ -1,5 +1,6 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,28 +9,55 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { dict } from '@/lib/dict'
+import { Receipt } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export type Receipt = {
-  id: string
-  amount: number
-  status: 'pending' | 'processing' | 'success' | 'failed'
-  category: string
-}
-
-export const columns: ColumnDef<Receipt>[] = [
+export const columns: ColumnDef<
+  Receipt & {
+    transaction: {
+      description: string | null
+      category: {
+        name: string
+      } | null
+    } | null
+  }
+>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('status')}</div>
-    ),
+    cell: ({ row }) => {
+      const receipt = row.original
+      const status = dict.ReceiptStatus.find((r) => r.value === receipt.status)
+      return (
+        <Badge variant={status?.value === 'RECEIVED' ? 'default' : 'outline'}>
+          {status ? status.label : 'Status desconhecido'}
+        </Badge>
+      )
+    },
   },
   {
-    accessorKey: 'category',
+    accessorKey: 'transaction.description',
+    header: 'Descrição',
+    cell: ({ row }) => {
+      const receipt = row.original
+
+      return (
+        <div className="capitalize">
+          {receipt.transaction?.description ?? 'Sem descrição'}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'transaction.category.name',
     header: 'Categoria',
+    cell: ({ row }) => {
+      const categoryName = row.original.transaction?.category?.name
+      return <div>{categoryName || 'Sem categoria'}</div>
+    },
   },
   {
     accessorKey: 'amount',

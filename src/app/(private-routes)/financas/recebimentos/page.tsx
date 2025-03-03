@@ -1,27 +1,11 @@
 import { DataTable } from '@/components/DataTable'
-import { columns, Receipt } from './columns'
+import { columns } from './columns'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
+import { actions } from '@/actions'
 
 export default async function ReceiptsPage() {
-  async function getData(): Promise<Receipt[]> {
-    return [
-      {
-        id: '728ed52f',
-        amount: 1200,
-        status: 'pending',
-        category: 'Extras',
-      },
-      {
-        id: '489e1d42',
-        amount: 12500,
-        status: 'success',
-        category: 'Salário',
-      },
-    ]
-  }
-
-  const data = await getData()
+  const transactions = await actions.transactions.receipt.findAll()
 
   return (
     <section className="page">
@@ -34,7 +18,7 @@ export default async function ReceiptsPage() {
           Adicionar
         </Link>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={transactions.data ?? []} />
     </section>
   )
 }
