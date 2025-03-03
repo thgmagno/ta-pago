@@ -53,7 +53,7 @@ export async function edit(
   paymentId: string,
   data: Partial<Payment>,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.payment.update({
@@ -69,7 +69,7 @@ export async function edit(
 export async function confirm(
   paymentId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.payment.update({
@@ -85,7 +85,7 @@ export async function confirm(
 export async function cancel(
   paymentId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.payment.update({
@@ -101,7 +101,7 @@ export async function cancel(
 export async function findUnique(
   paymentId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.payment.findUnique({
@@ -143,7 +143,7 @@ export async function findAll(params: FindAllParameters) {
 export async function destroy(
   paymentId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     const payment = await findUnique(paymentId, userId, groupId)

@@ -1,10 +1,10 @@
-import Link from 'next/link'
-import { buttonVariants } from '@/components/ui/button'
 import { DataTable } from '@/components/DataTable'
 import { paymentColumns } from './paymentColumns'
 import { dict } from '@/lib/dict'
 import { receiptColumns } from './receiptColumns'
 import { actions } from '@/actions'
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
 
 export default async function CategoriesPage() {
   const { paymentCategories } = await actions.categories.category.findAll()

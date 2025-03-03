@@ -9,7 +9,7 @@ export async function findAll() {
   const paymentCategories = await repositories.categories.category.findAll(
     'PAYMENT',
     user.id,
-    '',
+    user.groupId,
   )
 
   return { paymentCategories }

@@ -29,7 +29,7 @@ export async function rejectRequest(requestId: string) {
 export async function findAll(
   status?: GroupJoinRequestStatus,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.groupJoinRequest.findMany({

@@ -19,6 +19,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   deleted       Boolean   @default(false)
   deletedAt     DateTime?
+  groupId       String?
 
   // Relacionamentos do NextAuth
   accounts      Account[]
@@ -34,7 +35,7 @@ model User {
   // Campos adicionais
   createdAt    DateTime       @default(now())
   Transaction  Transaction[]
-  Group        Group[]
+  Group        Group?
   Category     Category[]
   Notification Notification[]
 
@@ -158,7 +159,7 @@ model Reserve {
 
 model Group {
   id            String             @id @default(cuid())
-  creatorUserId String
+  creatorUserId String             @unique
   name          String
   tag           String             @unique
   description   String

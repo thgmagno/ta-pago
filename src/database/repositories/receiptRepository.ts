@@ -53,7 +53,7 @@ export async function edit(
   receiptId: string,
   data: Partial<Receipt>,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.receipt.update({
@@ -69,7 +69,7 @@ export async function edit(
 export async function confirm(
   receiptId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.receipt.update({
@@ -85,7 +85,7 @@ export async function confirm(
 export async function cancel(
   receiptId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.receipt.update({
@@ -101,7 +101,7 @@ export async function cancel(
 export async function findUnique(
   receiptId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.receipt.findUnique({
@@ -143,7 +143,7 @@ export async function findAll(params: FindAllParameters) {
 export async function destroy(
   receiptId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     const receipt = await findUnique(receiptId, userId, groupId)

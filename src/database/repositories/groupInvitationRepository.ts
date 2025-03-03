@@ -27,7 +27,7 @@ export async function declineInvitation(invitationId: string) {
 }
 
 export async function findAll(
-  groupId?: string,
+  groupId?: string | null,
   status?: GroupInvitationStatus,
 ) {
   return handleDatabaseOperation(async () => {

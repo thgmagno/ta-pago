@@ -23,7 +23,7 @@ export async function edit(data: Partial<Category>) {
 export async function destroy(
   categoryId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.category.delete({
@@ -35,7 +35,7 @@ export async function destroy(
 export async function findUnique(
   categoryId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.category.findUnique({
@@ -47,7 +47,7 @@ export async function findUnique(
 export async function findAll(
   type?: CategoryType,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return await prisma.category.findMany({

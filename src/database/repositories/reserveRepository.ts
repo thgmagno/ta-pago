@@ -56,7 +56,7 @@ export async function edit(
   reserveId: string,
   data: Partial<Reserve>,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return prisma.reserve.update({
@@ -72,7 +72,7 @@ export async function edit(
 export async function findUnique(
   reserveId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     return prisma.reserve.findUnique({
@@ -122,7 +122,7 @@ export async function findAll(params: FindAllParameters) {
 export async function destroy(
   reserveId: string,
   userId?: string,
-  groupId?: string,
+  groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
     const reserve = await findUnique(reserveId, userId, groupId)

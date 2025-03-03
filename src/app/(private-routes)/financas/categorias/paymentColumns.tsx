@@ -11,6 +11,7 @@ import {
 import { Category } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export const paymentColumns: ColumnDef<Category>[] = [
   {
@@ -23,6 +24,8 @@ export const paymentColumns: ColumnDef<Category>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const category = row.original
+      const editUrl = `/financas/categorias/${category.id}`
+      const { replace } = useRouter()
 
       return (
         <DropdownMenu>
@@ -36,7 +39,9 @@ export const paymentColumns: ColumnDef<Category>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem>Editar categoria</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => replace(editUrl)}>
+              Editar categoria
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
