@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select'
 import { dict } from '@/lib/dict'
 import { ReceiptFormState } from '@/lib/states/transactions'
-import { Receipt, Transaction } from '@prisma/client'
+import { ReceiptComplete } from '@/lib/types'
 
 export function AddReceiptForm() {
   const [formState, action, isPending] = useActionState(
@@ -36,12 +36,12 @@ export function ReceiptForm({
   formState,
   action,
   isPending,
-  transaction,
+  receipt,
 }: {
   formState: ReceiptFormState
   action: (payload: FormData) => void
   isPending: boolean
-  transaction?: Transaction & { receipt: Receipt }
+  receipt?: ReceiptComplete
 }) {
   return (
     <form action={action}>
@@ -52,7 +52,7 @@ export function ReceiptForm({
           <Input
             id="description"
             placeholder="Descrição do pagamento (opcional)"
-            defaultValue={transaction?.description ?? ''}
+            defaultValue={receipt?.transaction?.description ?? ''}
           />
           <ErrorMessageForm message={formState.errors.description} />
         </div>
@@ -60,10 +60,7 @@ export function ReceiptForm({
         {/* Amount */}
         <div className="flex flex-col space-y-2">
           <Label>Valor</Label>
-          <CurrencyInput
-            name="amount"
-            defaultValue={transaction?.receipt.amount}
-          />
+          <CurrencyInput name="amount" defaultValue={receipt?.amount} />
           <ErrorMessageForm message={formState.errors.amount} />
         </div>
 
@@ -71,10 +68,7 @@ export function ReceiptForm({
           {/* receivedAt */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Data do recebimento</Label>
-            <DateInput
-              name="receivedAt"
-              defaultValue={transaction?.receipt.receivedAt}
-            />
+            <DateInput name="receivedAt" defaultValue={receipt?.receivedAt} />
             <ErrorMessageForm message={formState.errors.receivedAt} />
           </div>
 
@@ -83,7 +77,7 @@ export function ReceiptForm({
             <Label>Data do vencimento</Label>
             <DateInput
               name="scheduledDate"
-              defaultValue={transaction?.receipt.scheduledDate}
+              defaultValue={receipt?.scheduledDate}
             />
             <ErrorMessageForm message={formState.errors.scheduledDate} />
           </div>
@@ -93,10 +87,7 @@ export function ReceiptForm({
           {/* receiptMethod */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Categoria</Label>
-            <Select
-              name="receiptMethod"
-              defaultValue={transaction?.receipt.receiptMethod}
-            >
+            <Select name="receiptMethod" defaultValue={receipt?.receiptMethod}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar categoria" />
               </SelectTrigger>
@@ -119,7 +110,7 @@ export function ReceiptForm({
           {/* status */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Status</Label>
-            <Select name="status" defaultValue={transaction?.receipt.status}>
+            <Select name="status" defaultValue={receipt?.status}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar status" />
               </SelectTrigger>

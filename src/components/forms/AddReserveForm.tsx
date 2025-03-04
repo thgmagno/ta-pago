@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select'
 import { dict } from '@/lib/dict'
 import { ReserveFormState } from '@/lib/states/transactions'
-import { Reserve, Transaction } from '@prisma/client'
+import { ReservationComplete } from '@/lib/types'
 
 export function AddReserveForm() {
   const [formState, action, isPending] = useActionState(
@@ -36,12 +36,12 @@ export function ReserveForm({
   formState,
   action,
   isPending,
-  transaction,
+  reserve,
 }: {
   formState: ReserveFormState
   action: (payload: FormData) => void
   isPending: boolean
-  transaction?: Transaction & { reserve: Reserve }
+  reserve?: ReservationComplete
 }) {
   return (
     <form action={action}>
@@ -52,7 +52,7 @@ export function ReserveForm({
           <Input
             id="description"
             placeholder="Descrição do pagamento (opcional)"
-            defaultValue={transaction?.description ?? ''}
+            defaultValue={reserve?.transaction?.description ?? ''}
           />
           <ErrorMessageForm message={formState.errors.description} />
         </div>
@@ -60,20 +60,14 @@ export function ReserveForm({
         {/* Amount */}
         <div className="flex flex-col space-y-2">
           <Label>Valor</Label>
-          <CurrencyInput
-            name="amount"
-            defaultValue={transaction?.reserve.amount}
-          />
+          <CurrencyInput name="amount" defaultValue={reserve?.amount} />
           <ErrorMessageForm message={formState.errors.amount} />
         </div>
 
         {/* Yield */}
         <div className="flex flex-col space-y-2">
           <Label>Rendimento</Label>
-          <CurrencyInput
-            name="yield"
-            defaultValue={transaction?.reserve.yield}
-          />
+          <CurrencyInput name="yield" defaultValue={reserve?.yield} />
           <ErrorMessageForm message={formState.errors.yield} />
         </div>
 
@@ -81,20 +75,14 @@ export function ReserveForm({
           {/* startDate */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Data do início</Label>
-            <DateInput
-              name="startDate"
-              defaultValue={transaction?.reserve.startDate}
-            />
+            <DateInput name="startDate" defaultValue={reserve?.startDate} />
             <ErrorMessageForm message={formState.errors.startDate} />
           </div>
 
           {/* endDate */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Data do término</Label>
-            <DateInput
-              name="endDate"
-              defaultValue={transaction?.reserve.endDate}
-            />
+            <DateInput name="endDate" defaultValue={reserve?.endDate} />
             <ErrorMessageForm message={formState.errors.endDate} />
           </div>
         </div>
@@ -102,7 +90,7 @@ export function ReserveForm({
         {/* status */}
         <div className="flex flex-1 flex-col space-y-2">
           <Label>Status</Label>
-          <Select name="status" defaultValue={transaction?.reserve.status}>
+          <Select name="status" defaultValue={reserve?.status}>
             <SelectTrigger>
               <SelectValue placeholder="Selecionar status" />
             </SelectTrigger>

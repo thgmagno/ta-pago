@@ -15,10 +15,6 @@ export function Breadcrumb() {
   const pathname = usePathname()
   const pathSegments = pathname.split('/').filter(Boolean)
 
-  const lastSegmentIsID =
-    pathSegments.length > 0 && pathSegments[pathSegments.length - 1].length > 10
-  if (lastSegmentIsID) pathSegments[pathSegments.length - 1] = 'Editar'
-
   return (
     <BreadcrumbCn className="p-3 pl-5">
       <BreadcrumbList>

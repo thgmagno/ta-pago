@@ -1,15 +1,11 @@
 'use client'
 
-import { Receipt, Transaction } from '@prisma/client'
 import { actions } from '@/actions'
 import { useActionState } from 'react'
 import { ReceiptForm } from './AddReceiptForm'
+import { ReceiptComplete } from '@/lib/types'
 
-export function EditReceiptForm({
-  transaction,
-}: {
-  transaction?: Transaction & { receipt: Receipt }
-}) {
+export function EditReceiptForm({ receipt }: { receipt?: ReceiptComplete }) {
   const [formState, action, isPending] = useActionState(
     actions.transactions.receipt.create,
     { errors: {} },
@@ -20,7 +16,7 @@ export function EditReceiptForm({
       formState={formState}
       action={action}
       isPending={isPending}
-      transaction={transaction}
+      receipt={receipt}
     />
   )
 }

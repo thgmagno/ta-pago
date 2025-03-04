@@ -1,14 +1,14 @@
 'use client'
 
-import { Reserve, Transaction } from '@prisma/client'
 import { actions } from '@/actions'
 import { useActionState } from 'react'
 import { ReserveForm } from './AddReserveForm'
+import { ReservationComplete } from '@/lib/types'
 
 export function EditReserveForm({
-  transaction,
+  reserve,
 }: {
-  transaction?: Transaction & { reserve: Reserve }
+  reserve?: ReservationComplete
 }) {
   const [formState, action, isPending] = useActionState(
     actions.transactions.reserve.create,
@@ -20,7 +20,7 @@ export function EditReserveForm({
       formState={formState}
       action={action}
       isPending={isPending}
-      transaction={transaction}
+      reserve={reserve}
     />
   )
 }
