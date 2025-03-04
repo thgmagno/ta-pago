@@ -8,6 +8,15 @@ import { CardWithFooter } from './CardForm'
 import { ErrorMessageForm } from './ErrorMessageForm'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export function AddCategoryForm() {
   const [formState, action, isPending] = useActionState(
@@ -35,13 +44,35 @@ export function CategoryForm({
     <form action={action}>
       <div className="grid w-full items-center gap-4">
         {/* Tipo */}
-        <Label className="mb-3">Tipo: Pagamento</Label>
+        <div className="flex flex-col space-y-2">
+          <Label>Tipo</Label>
+          <Select name="type" defaultValue={category?.type ?? ''}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecionar tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Tipos</SelectLabel>
+                <SelectItem key={'PAYMENT'} value={'PAYMENT'}>
+                  Pagamento
+                </SelectItem>
+                <SelectItem key={'RECEIPT'} value={'RECEIPT'}>
+                  Recebimento
+                </SelectItem>
+                <SelectItem key={'RESERVATION'} value={'RESERVATION'}>
+                  Reserva
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <ErrorMessageForm message={formState.errors.name} />
+        </div>
 
         {/* Description */}
         <div className="flex flex-col space-y-2">
           <Label>Descrição</Label>
           <Input
-            id="description"
+            name="name"
             placeholder="Descrição da categoria"
             defaultValue={category?.name ?? ''}
           />

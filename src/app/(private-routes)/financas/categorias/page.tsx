@@ -1,43 +1,50 @@
 import { DataTable } from '@/components/DataTable'
-import { paymentColumns } from './paymentColumns'
-import { dict } from '@/lib/dict'
-import { receiptColumns } from './receiptColumns'
+import { columns } from './columns'
 import { actions } from '@/actions'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
+import clsx from 'clsx'
 
 export default async function CategoriesPage() {
-  const { paymentCategories } = await actions.categories.category.findAll()
+  const { paymentCategories, receiptCategories, reservationCategories } =
+    await actions.categories.category.findAll()
 
   return (
     <section className="page">
+      <Link
+        href={'/financas/categorias/adicionar'}
+        className={clsx(
+          'ml-auto w-fit',
+          buttonVariants({ variant: 'outline', size: 'sm' }),
+        )}
+      >
+        Adicionar
+      </Link>
+
       {/* Categories Payment */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <span>
           Categorias de pagamento:{' '}
           {String(paymentCategories.data?.length ?? 0).padStart(2, '0')}
         </span>
-        <Link
-          href="/financas/categorias/adicionar"
-          className={buttonVariants({ variant: 'outline', size: 'sm' })}
-        >
-          Adicionar
-        </Link>
       </div>
-      <DataTable columns={paymentColumns} data={paymentCategories.data ?? []} />
+      <DataTable columns={columns} data={paymentCategories.data ?? []} />
 
       {/* Categories Receipt */}
-      <div className="flex flex-col">
+      <div className="flex items-center">
         <span>
-          Categorias de recebimento:{' '}
-          {String(dict.ReceiptMethods.length ?? 0).padStart(2, '0')}
+          Categorias de recebimento: {String([].length ?? 0).padStart(2, '0')}
         </span>
-        <small className="text-muted-foreground mt-2">
-          No momento, as categorias de recebimento não podem ser editadas ou
-          sobrescritas.
-        </small>
       </div>
-      <DataTable columns={receiptColumns} data={dict.ReceiptMethods} />
+      <DataTable columns={columns} data={receiptCategories.data ?? []} />
+
+      {/* Categories Reserves */}
+      <div className="flex items-center">
+        <span>
+          Categorias de reserva: {String([].length ?? 0).padStart(2, '0')}
+        </span>
+      </div>
+      <DataTable columns={columns} data={reservationCategories.data ?? []} />
     </section>
   )
 }

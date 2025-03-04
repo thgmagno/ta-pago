@@ -13,7 +13,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export const paymentColumns: ColumnDef<Category>[] = [
+export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: 'name',
     header: 'Descrição',
