@@ -15,8 +15,6 @@ export function Breadcrumb() {
   const pathname = usePathname()
   const pathSegments = pathname.split('/').filter(Boolean)
 
-  if (pathname === '/') return null
-
   return (
     <BreadcrumbCn className="p-3 pl-5">
       <BreadcrumbList>
