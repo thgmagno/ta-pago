@@ -8,14 +8,20 @@ export default async function EditReceiptPage(props: {
   searchParams: SearchParams
 }) {
   const searchParams = await props.searchParams
-  const receipt = await actions.transactions.receipt.findUnique(
-    redirectIfInvalidId(searchParams.id, '/financas/recebimentos'),
-  )
+  const [receipt, { receiptCategories }] = await Promise.all([
+    actions.transactions.receipt.findUnique(
+      redirectIfInvalidId(searchParams.id, '/financas/recebimentos'),
+    ),
+    actions.categories.category.findAll(),
+  ])
 
   return (
     <section className="page">
       <CardWithForm>
-        <EditReceiptForm receipt={receipt} />
+        <EditReceiptForm
+          receipt={receipt}
+          categories={receiptCategories.data ?? []}
+        />
       </CardWithForm>
     </section>
   )

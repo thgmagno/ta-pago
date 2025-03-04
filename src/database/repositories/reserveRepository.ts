@@ -76,7 +76,7 @@ export async function findUnique(
     return prisma.reserve.findUnique({
       where: {
         id: reserveId,
-        OR: [{ transaction: { userId, groupId } }],
+        AND: { OR: [{ transaction: { userId, groupId } }] },
       },
       include: {
         transaction: {

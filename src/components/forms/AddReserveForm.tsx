@@ -99,7 +99,10 @@ export function ReserveForm({
           {/* categoryId */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Categoria</Label>
-            <Select name="category">
+            <Select
+              name="category"
+              defaultValue={reserve?.transaction?.categoryId ?? ''}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar categoria" />
               </SelectTrigger>
@@ -108,7 +111,7 @@ export function ReserveForm({
                   <SelectLabel>Categorias</SelectLabel>
 
                   {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.name}>
+                    <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>
                   ))}

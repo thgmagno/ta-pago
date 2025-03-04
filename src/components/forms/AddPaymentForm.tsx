@@ -95,7 +95,10 @@ export function PaymentForm({
           {/* categoryId */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Categoria</Label>
-            <Select name="category">
+            <Select
+              name="category"
+              defaultValue={payment?.transaction?.categoryId ?? ''}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar categoria" />
               </SelectTrigger>
@@ -104,7 +107,7 @@ export function PaymentForm({
                   <SelectLabel>Categorias</SelectLabel>
 
                   {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.name}>
+                    <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>
                   ))}

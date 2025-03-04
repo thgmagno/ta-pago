@@ -8,14 +8,20 @@ export default async function EditPaymentPage(props: {
   searchParams: SearchParams
 }) {
   const searchParams = await props.searchParams
-  const payment = await actions.transactions.payment.findUnique(
-    redirectIfInvalidId(searchParams.id, '/financas/pagamentos'),
-  )
+  const [payment, { paymentCategories }] = await Promise.all([
+    actions.transactions.payment.findUnique(
+      redirectIfInvalidId(searchParams.id, '/financas/pagamentos'),
+    ),
+    actions.categories.category.findAll(),
+  ])
 
   return (
     <section className="page">
       <CardWithForm>
-        <EditPaymentForm payment={payment} />
+        <EditPaymentForm
+          payment={payment}
+          categories={paymentCategories.data ?? []}
+        />
       </CardWithForm>
     </section>
   )

@@ -107,7 +107,7 @@ export async function findUnique(
     return await prisma.payment.findUnique({
       where: {
         id: paymentId,
-        OR: [{ transaction: { userId, groupId } }],
+        AND: { OR: [{ transaction: { userId, groupId } }] },
       },
       include: {
         transaction: {

@@ -107,7 +107,7 @@ export async function findUnique(
     return await prisma.receipt.findUnique({
       where: {
         id: receiptId,
-        OR: [{ transaction: { userId, groupId } }],
+        AND: { OR: [{ transaction: { userId, groupId } }] },
       },
       include: {
         transaction: {

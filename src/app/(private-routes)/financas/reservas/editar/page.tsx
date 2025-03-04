@@ -8,14 +8,20 @@ export default async function EditReservePage(props: {
   searchParams: SearchParams
 }) {
   const searchParams = await props.searchParams
-  const reserve = await actions.transactions.reserve.findUnique(
-    redirectIfInvalidId(searchParams.id, '/financas/recebimentos'),
-  )
+  const [reserve, { reservationCategories }] = await Promise.all([
+    actions.transactions.reserve.findUnique(
+      redirectIfInvalidId(searchParams.id, '/financas/reservas'),
+    ),
+    actions.categories.category.findAll(),
+  ])
 
   return (
     <section className="page">
       <CardWithForm>
-        <EditReserveForm reserve={reserve} />
+        <EditReserveForm
+          reserve={reserve}
+          categories={reservationCategories.data ?? []}
+        />
       </CardWithForm>
     </section>
   )
