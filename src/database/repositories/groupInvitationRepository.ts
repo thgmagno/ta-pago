@@ -26,14 +26,14 @@ export async function declineInvitation(invitationId: string) {
   }, 'Convite recusado')
 }
 
-export async function findAll(
-  groupId?: string | null,
-  status?: GroupInvitationStatus,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.groupInvitation.findMany({
-      where: { groupId, status },
-      orderBy: { sendDate: 'desc' },
-    })
-  }, 'Busca realizada com sucesso')
-}
+// export async function findAll(
+//   groupId?: string | null,
+//   status?: GroupInvitationStatus,
+// ) {
+//   return handleDatabaseOperation(async () => {
+//     return await prisma.groupInvitation.findMany({
+//       where: { groupId, status },
+//       orderBy: { sendDate: 'desc' },
+//     })
+//   }, 'Busca realizada com sucesso')
+// }
