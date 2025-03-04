@@ -67,9 +67,13 @@ export const ReceiptSchema = z.object({
     .refine((val) => val > 0, { message: 'O valor deve ser maior que zero' }),
   categoryId: z.string().optional(),
   receivedAt: z
-    .date({ message: 'A data de recebimento é inválida' })
-    .optional(),
-  scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
+    .string()
+    .transform((val) => (val ? new Date(val) : undefined))
+    .pipe(z.date().optional()),
+  scheduledDate: z
+    .string()
+    .transform((val) => new Date(val))
+    .pipe(z.date()),
   receiptMethod: z
     .enum(
       [...Object.values(ReceiptMethodType)] as [

@@ -40,7 +40,7 @@ interface FindAllParameters {
 
 export async function create(params: CreatePayment) {
   return handleDatabaseOperation(async () => {
-    const [transaction] = await prisma.$transaction([
+    const [transaction, payment] = await prisma.$transaction([
       prisma.transaction.create({
         data: {
           type: 'PAYMENT',
@@ -63,7 +63,7 @@ export async function create(params: CreatePayment) {
     ])
 
     await prisma.payment.update({
-      where: { id: transaction.id },
+      where: { id: payment.id },
       data: { transactionId: transaction.id },
     })
   }, 'Pagamento criado com sucesso')

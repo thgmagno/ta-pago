@@ -40,7 +40,7 @@ interface FindAllParameters {
 
 export async function create(params: CreateReservation) {
   return handleDatabaseOperation(async () => {
-    const [transaction] = await prisma.$transaction([
+    const [transaction, reserve] = await prisma.$transaction([
       prisma.transaction.create({
         data: {
           type: 'RESERVATION',
@@ -63,7 +63,7 @@ export async function create(params: CreateReservation) {
     ])
 
     await prisma.reserve.update({
-      where: { id: transaction.id },
+      where: { id: reserve.id },
       data: { transactionId: transaction.id },
     })
   }, 'Reserva criada com sucesso')

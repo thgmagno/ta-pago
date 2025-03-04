@@ -14,24 +14,20 @@ export async function create(
   const parsed = CategorySchema.safeParse(
     Object.fromEntries(formData.entries()),
   )
-  console.log(formData)
 
   if (!parsed.success) {
-    console.log(parsed.error)
     return { errors: parsed.error.flatten().fieldErrors }
   }
 
   try {
     const user = await actions.session.getServerSession()
 
-    console.log('iniciando')
     await repositories.categories.category.create({
       name: parsed.data.name,
       type: parsed.data.type,
       userId: user.id,
       groupId: user.groupId,
     })
-    console.log('finalizando')
   } catch (error) {
     if (error instanceof Error) {
       return {

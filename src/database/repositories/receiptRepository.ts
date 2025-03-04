@@ -40,7 +40,7 @@ interface FindAllParameters {
 
 export async function create(params: CreateReceipt) {
   return handleDatabaseOperation(async () => {
-    const [transaction] = await prisma.$transaction([
+    const [transaction, receipt] = await prisma.$transaction([
       prisma.transaction.create({
         data: {
           type: 'RECEIPT',
@@ -63,7 +63,7 @@ export async function create(params: CreateReceipt) {
     ])
 
     await prisma.receipt.update({
-      where: { id: transaction.id },
+      where: { id: receipt.id },
       data: { transactionId: transaction.id },
     })
   }, 'Recebimento criado com sucesso')

@@ -166,7 +166,7 @@ export function ReceiptForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <ErrorMessageForm message={formState.errors.scheduledDate} />
+            <ErrorMessageForm message={formState.errors.status} />
           </div>
         </div>
       </div>
