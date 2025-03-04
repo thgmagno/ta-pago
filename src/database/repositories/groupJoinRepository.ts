@@ -1,4 +1,4 @@
-import { GroupJoinRequest, GroupJoinRequestStatus } from '@prisma/client'
+import { GroupJoinRequest } from '@prisma/client'
 import { prisma } from '@/database/prisma'
 import { handleDatabaseOperation } from '@/database/helper'
 
@@ -26,21 +26,21 @@ export async function rejectRequest(requestId: string) {
   }, 'Solicitação rejeitada')
 }
 
-export async function findAll(
-  status?: GroupJoinRequestStatus,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.groupJoinRequest.findMany({
-      where: {
-        groupId,
-        status,
-        userId,
-      },
-      orderBy: {
-        requestDate: 'desc',
-      },
-    })
-  }, 'Busca realizada com sucesso')
-}
+// export async function findAll(
+//   status?: GroupJoinRequestStatus,
+//   userId?: string,
+//   groupId?: string | null,
+// ) {
+//   return handleDatabaseOperation(async () => {
+//     return await prisma.groupJoinRequest.findMany({
+//       where: {
+//         groupId,
+//         status,
+//         userId,
+//       },
+//       orderBy: {
+//         requestDate: 'desc',
+//       },
+//     })
+//   }, 'Busca realizada com sucesso')
+// }

@@ -1,4 +1,4 @@
-import { GroupInvitation, GroupInvitationStatus } from '@prisma/client'
+import { GroupInvitation } from '@prisma/client'
 import { prisma } from '@/database/prisma'
 import { handleDatabaseOperation } from '@/database/helper'
 
