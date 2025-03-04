@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
-import { parseISO, formatDistance } from 'date-fns'
+import { formatDistance } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { redirect } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'
@@ -34,8 +34,7 @@ export const calculateDifferenceBetweenDates = (
   endDate: Date,
 ) => {
   if (!startDate || !endDate) return '-'
-  const from = parseISO(startDate.toDateString())
-  const to = parseISO(endDate.toString())
-  const periodo = formatDistance(from, to, { locale: ptBR })
+
+  const periodo = formatDistance(startDate, endDate, { locale: ptBR })
   return periodo
 }

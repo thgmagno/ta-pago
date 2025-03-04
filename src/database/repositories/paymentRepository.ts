@@ -108,7 +108,10 @@ export async function findUnique(
     return await prisma.payment.findUnique({
       where: {
         id: paymentId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
+        AND: [
+          { transaction: { userId } },
+          { OR: [{ transaction: { groupId } }, { transaction: { userId } }] },
+        ],
       },
       include: {
         transaction: {
@@ -117,21 +120,6 @@ export async function findUnique(
       },
     })
   }, 'Pagamento encontrado com sucesso')
-}
-
-export async function findByTransaction(
-  transactionId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.payment.findFirst({
-      where: {
-        transactionId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-    })
-  }, 'Busca realizada com sucesso')
 }
 
 export async function update(params: UpdatePayment) {

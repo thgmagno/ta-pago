@@ -98,25 +98,36 @@ export const ReserveSchema = z
       .string()
       .min(1, { message: 'O valor é obrigatório' })
       .transform((val) =>
-        Number(val.replace(/[^\d,.-]/g, '').replace(',', '.')),
+        Number(
+          val
+            .replace(/\./g, '')
+            .replace(/[^\d,.-]/g, '')
+            .replace(',', '.'),
+        ),
       )
       .refine((val) => !isNaN(val), { message: 'O valor deve ser um número' })
       .refine((val) => val > 0, { message: 'O valor deve ser maior que zero' }),
     categoryId: z.string().optional(),
     yield: z
       .string()
-      .optional()
-      .refine(
-        (val) => val === undefined || val.trim() === '' || !isNaN(Number(val)),
-        {
-          message: 'O rendimento deve ser um número',
-        },
-      )
+      .min(1, { message: 'O valor é obrigatório' })
       .transform((val) =>
-        val !== undefined && val.trim() !== '' ? Number(val) : undefined,
-      ),
-    startDate: z.date({ message: 'A data de início é obrigatória' }),
-    endDate: z.date().optional(),
+        Number(
+          val
+            .replace(/\./g, '')
+            .replace(/[^\d,.-]/g, '')
+            .replace(',', '.'),
+        ),
+      )
+      .refine((val) => !isNaN(val), { message: 'O valor deve ser um número' }),
+    startDate: z
+      .string()
+      .transform((val) => new Date(val))
+      .pipe(z.date()),
+    endDate: z
+      .string()
+      .transform((val) => new Date(val))
+      .pipe(z.date().optional()),
     status: z.enum(
       [...Object.values(ReserveStatus)] as [ReserveStatus, ...ReserveStatus[]],
       { message: 'Status de reserva inválido' },

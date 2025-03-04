@@ -7,6 +7,7 @@ import * as group from './groupRepository'
 import * as payment from './paymentRepository'
 import * as receipt from './receiptRepository'
 import * as reserve from './reserveRepository'
+import * as transaction from './transactionRepository'
 import * as user from './userRepository'
 
 export const repositories = {
@@ -21,6 +22,7 @@ export const repositories = {
     reserve,
     payment,
     receipt,
+    transaction,
   },
   users: {
     feedback,

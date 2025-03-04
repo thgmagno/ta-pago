@@ -18,31 +18,32 @@ export async function update(
   }
 
   if (!parsed.data.id) {
-    return { errors: { _form: 'Parâmetros inválidos, tente novamente' } }
+    return { errors: { _form: 'Parâmetros inválidos' } }
   }
 
   try {
     const user = await actions.session.getServerSession()
 
-    const payment = await repositories.transactions.payment.findByTransaction(
-      parsed.data.id,
-      user.id,
-      user.groupId,
-    )
+    const transaction =
+      await repositories.transactions.transaction.findTransactionByPaymentId(
+        parsed.data.id,
+        user.id,
+        user.groupId,
+      )
 
-    if (!payment.data?.id) {
-      return { errors: { _form: 'Pagamento não encontrado' } }
+    if (!transaction.data?.id) {
+      return { errors: { _form: 'Transação não encontrada' } }
     }
 
     await repositories.transactions.payment.update({
       transaction: {
-        id: parsed.data.id,
+        id: transaction.data.id,
         groupId: user.groupId,
         categoryId: parsed.data.categoryId,
         description: parsed.data.description,
       },
       payment: {
-        id: payment.data?.id,
+        id: parsed.data.id,
         paidAt: parsed.data.paidAt,
         scheduledDate: parsed.data.scheduledDate,
         amount: parsed.data.amount,
