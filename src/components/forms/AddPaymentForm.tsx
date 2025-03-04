@@ -20,15 +20,21 @@ import {
 import { dict } from '@/lib/dict'
 import { PaymentFormState } from '@/lib/states/transactions'
 import { PaymentComplete } from '@/lib/types'
+import { Category } from '@prisma/client'
 
-export function AddPaymentForm() {
+export function AddPaymentForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
     actions.transactions.payment.create,
     { errors: {} },
   )
 
   return (
-    <PaymentForm formState={formState} action={action} isPending={isPending} />
+    <PaymentForm
+      formState={formState}
+      action={action}
+      isPending={isPending}
+      categories={categories}
+    />
   )
 }
 
@@ -37,11 +43,13 @@ export function PaymentForm({
   action,
   isPending,
   payment,
+  categories,
 }: {
   formState: PaymentFormState
   action: (payload: FormData) => void
   isPending: boolean
   payment?: PaymentComplete
+  categories: Category[]
 }) {
   return (
     <form action={action}>
@@ -94,6 +102,12 @@ export function PaymentForm({
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Categorias</SelectLabel>
+
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -103,7 +117,10 @@ export function PaymentForm({
           {/* paymentMethod */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Método</Label>
-            <Select name="paymentMethod" defaultValue={payment?.paymentMethod}>
+            <Select
+              name="paymentMethod"
+              defaultValue={payment?.paymentMethod ?? ''}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar método" />
               </SelectTrigger>

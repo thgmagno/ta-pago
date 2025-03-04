@@ -118,27 +118,27 @@ model Transaction {
 }
 
 model Payment {
-  id            String            @id @default(cuid())
+  id            String             @id @default(cuid())
   transactionId String?
   paidAt        DateTime?
   scheduledDate DateTime
   amount        Float
   status        PaymentStatus
-  paymentMethod PaymentMethodType
-  transaction   Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  paymentMethod PaymentMethodType?
+  transaction   Transaction?       @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 
   @@map("payments")
 }
 
 model Receipt {
-  id            String            @id @default(cuid())
+  id            String             @id @default(cuid())
   transactionId String?
   receivedAt    DateTime?
   scheduledDate DateTime
   amount        Float
   status        ReceiptStatus
-  receiptMethod ReceiptMethodType
-  transaction   Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  receiptMethod ReceiptMethodType?
+  transaction   Transaction?       @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 
   @@map("receipts")
 }
@@ -278,7 +278,8 @@ enum TransactionType {
 }
 
 enum PaymentMethodType {
-  CARD
+  CREDIT_CARD
+  DEBIT_CARD
   CASH
   TRANSFER
   PIX
@@ -288,13 +289,10 @@ enum PaymentMethodType {
 }
 
 enum ReceiptMethodType {
-  SALARY
-  SALE
-  EXTRA
-  TICKET
-  INVESTMENT
-  DIVIDEND
-  REIMBURSEMENT
+  TRANSFER
+  PIX
+  CASH
+  CHECK
   OTHER
 }
 

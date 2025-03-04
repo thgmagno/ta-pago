@@ -8,7 +8,8 @@ import {
 
 export const dict = {
   PaymentMethods: [
-    { value: PaymentMethodType.CARD, label: 'Cartão' },
+    { value: PaymentMethodType.CREDIT_CARD, label: 'Cartão de Crédito' },
+    { value: PaymentMethodType.DEBIT_CARD, label: 'Cartão de Débito' },
     { value: PaymentMethodType.CASH, label: 'Dinheiro' },
     { value: PaymentMethodType.TRANSFER, label: 'Transferência' },
     { value: PaymentMethodType.PIX, label: 'PIX' },
@@ -17,16 +18,10 @@ export const dict = {
     { value: PaymentMethodType.OTHER, label: 'Outro' },
   ],
   ReceiptMethods: [
-    { value: ReceiptMethodType.SALARY, label: 'Salário' },
-    { value: ReceiptMethodType.SALE, label: 'Venda' },
-    { value: ReceiptMethodType.EXTRA, label: 'Extra' },
-    { value: ReceiptMethodType.TICKET, label: 'Ticket' },
-    { value: ReceiptMethodType.INVESTMENT, label: 'Investimento' },
-    { value: ReceiptMethodType.DIVIDEND, label: 'Dividendo' },
-    {
-      value: ReceiptMethodType.REIMBURSEMENT,
-      label: 'Reembolso',
-    },
+    { value: ReceiptMethodType.TRANSFER, label: 'Transferência' },
+    { value: ReceiptMethodType.PIX, label: 'PIX' },
+    { value: ReceiptMethodType.CASH, label: 'Dinheiro' },
+    { value: ReceiptMethodType.CHECK, label: 'Cheque' },
     { value: ReceiptMethodType.OTHER, label: 'Outro' },
   ],
   PaymentStatus: [

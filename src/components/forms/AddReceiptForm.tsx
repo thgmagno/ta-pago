@@ -20,15 +20,21 @@ import {
 import { dict } from '@/lib/dict'
 import { ReceiptFormState } from '@/lib/states/transactions'
 import { ReceiptComplete } from '@/lib/types'
+import { Category } from '@prisma/client'
 
-export function AddReceiptForm() {
+export function AddReceiptForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
     actions.transactions.receipt.create,
     { errors: {} },
   )
 
   return (
-    <ReceiptForm formState={formState} action={action} isPending={isPending} />
+    <ReceiptForm
+      formState={formState}
+      action={action}
+      isPending={isPending}
+      categories={categories}
+    />
   )
 }
 
@@ -37,11 +43,13 @@ export function ReceiptForm({
   action,
   isPending,
   receipt,
+  categories,
 }: {
   formState: ReceiptFormState
   action: (payload: FormData) => void
   isPending: boolean
   receipt?: ReceiptComplete
+  categories: Category[]
 }) {
   return (
     <form action={action}>
@@ -83,17 +91,42 @@ export function ReceiptForm({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
-          {/* receiptMethod */}
+        <div className="flex flex-col gap-2 lg:flex-row">
+          {/* categoryId */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Categoria</Label>
-            <Select name="receiptMethod" defaultValue={receipt?.receiptMethod}>
+            <Select name="category">
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar categoria" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Categorias</SelectLabel>
+
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <ErrorMessageForm message={formState.errors.categoryId} />
+          </div>
+
+          {/* receiptMethod */}
+          <div className="flex flex-1 flex-col space-y-2">
+            <Label>Método</Label>
+            <Select
+              name="receiptMethod"
+              defaultValue={receipt?.receiptMethod ?? ''}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecionar método" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Métodos</SelectLabel>
                   {dict.ReceiptMethods.sort((a, b) =>
                     a.label.localeCompare(b.label),
                   ).map((method) => (

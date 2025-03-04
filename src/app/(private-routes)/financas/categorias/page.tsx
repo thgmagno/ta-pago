@@ -33,7 +33,8 @@ export default async function CategoriesPage() {
       {/* Categories Receipt */}
       <div className="flex items-center">
         <span>
-          Categorias de recebimento: {String([].length ?? 0).padStart(2, '0')}
+          Categorias de recebimento:{' '}
+          {String(receiptCategories.data?.length ?? 0).padStart(2, '0')}
         </span>
       </div>
       <DataTable columns={columns} data={receiptCategories.data ?? []} />
@@ -41,7 +42,8 @@ export default async function CategoriesPage() {
       {/* Categories Reserves */}
       <div className="flex items-center">
         <span>
-          Categorias de reserva: {String([].length ?? 0).padStart(2, '0')}
+          Categorias de reserva:{' '}
+          {String(reservationCategories.data?.length ?? 0).padStart(2, '0')}
         </span>
       </div>
       <DataTable columns={columns} data={reservationCategories.data ?? []} />
