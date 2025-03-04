@@ -31,10 +31,19 @@ export function formatDateBR(date?: Date | null) {
 
 export const calculateDifferenceBetweenDates = (
   startDate: Date,
-  endDate: Date,
+  endDate?: Date | null,
 ) => {
-  if (!startDate || !endDate) return '-'
+  if (!startDate) return '-'
 
-  const periodo = formatDistance(startDate, endDate, { locale: ptBR })
+  const periodo = formatDistance(startDate, endDate ?? new Date(), {
+    locale: ptBR,
+  })
   return periodo
+}
+
+export const parseDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
+  date.setUTCHours(12, 0, 0, 0)
+  return date
 }

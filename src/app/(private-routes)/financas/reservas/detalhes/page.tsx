@@ -40,7 +40,7 @@ export default async function DetailsReservePage(props: {
           {/* Tipo */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Tipo:</Label>
-            <p>
+            <p className="col-span-3">
               {reserve.transaction?.type
                 ? dict.TransactionTypes[reserve.transaction.type]
                 : 'Não informado'}
@@ -52,7 +52,7 @@ export default async function DetailsReservePage(props: {
           {/* Descricao */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Descrição:</Label>
-            <p>{reserve.transaction?.description}</p>
+            <p className="col-span-3">{reserve.transaction?.description}</p>
           </div>
 
           <Separator />
@@ -60,7 +60,9 @@ export default async function DetailsReservePage(props: {
           {/* Categoria */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Categoria:</Label>
-            <p>{reserve?.transaction?.category?.name ?? '-'}</p>
+            <p className="col-span-3">
+              {reserve?.transaction?.category?.name ?? '-'}
+            </p>
           </div>
 
           <Separator />
@@ -68,7 +70,9 @@ export default async function DetailsReservePage(props: {
           {/* Data de registro */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Data de registro:</Label>
-            <p>{formatDateBR(reserve.transaction?.creationDate)}</p>
+            <p className="col-span-3">
+              {formatDateBR(reserve.transaction?.creationDate)}
+            </p>
           </div>
 
           <Separator />
@@ -76,7 +80,9 @@ export default async function DetailsReservePage(props: {
           {/* Data de início */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Data de início:</Label>
-            <p>{reserve?.startDate ? formatDateBR(reserve?.startDate) : '-'}</p>
+            <p className="col-span-3">
+              {reserve?.startDate ? formatDateBR(reserve?.startDate) : '-'}
+            </p>
           </div>
 
           <Separator />
@@ -84,7 +90,9 @@ export default async function DetailsReservePage(props: {
           {/* Data de término */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Data de término:</Label>
-            <p>{reserve?.endDate ? formatDateBR(reserve?.endDate) : '-'}</p>
+            <p className="col-span-3">
+              {reserve?.endDate ? formatDateBR(reserve?.endDate) : '-'}
+            </p>
           </div>
 
           <Separator />
@@ -92,11 +100,11 @@ export default async function DetailsReservePage(props: {
           {/* Duração */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Duração:</Label>
-            <p>
-              {reserve?.startDate && reserve?.endDate
+            <p className="col-span-3">
+              {reserve?.startDate
                 ? calculateDifferenceBetweenDates(
                     reserve.startDate,
-                    reserve.endDate,
+                    reserve?.endDate,
                   )
                 : '-'}
             </p>
@@ -107,7 +115,7 @@ export default async function DetailsReservePage(props: {
           {/* Valor inicial */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Valor inicial:</Label>
-            <p>{formatCurrencyBRL(reserve?.amount)}</p>
+            <p className="col-span-3">{formatCurrencyBRL(reserve?.amount)}</p>
           </div>
 
           <Separator />
@@ -115,7 +123,7 @@ export default async function DetailsReservePage(props: {
           {/* Rentabilidade */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Rentabilidade:</Label>
-            <p>{formatCurrencyBRL(reserve?.yield)}</p>
+            <p className="col-span-3">{formatCurrencyBRL(reserve?.yield)}</p>
           </div>
 
           <Separator />
@@ -123,7 +131,7 @@ export default async function DetailsReservePage(props: {
           {/* Valor final */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Valor final:</Label>
-            <p>
+            <p className="col-span-3">
               {formatCurrencyBRL(
                 (reserve?.amount ?? 0) + (reserve?.yield ?? 0),
               )}
@@ -135,7 +143,7 @@ export default async function DetailsReservePage(props: {
           {/* Status */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Status:</Label>
-            <p>
+            <p className="col-span-3">
               {reserve?.status
                 ? dict.ReserveStatus.find((r) => r.value === reserve.status)
                     ?.label

@@ -17,25 +17,32 @@ import {
 interface Props {
   name: string
   defaultValue?: Date | null
+  disabled?: boolean
 }
 
-export function DateInput({ name, defaultValue }: Props) {
+export function DateInput({ name, defaultValue, disabled }: Props) {
   const [date, setDate] = React.useState<Date>(defaultValue ?? new Date())
 
   return (
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button
-            variant={'outline'}
-            className={cn(
-              'justify-start text-left font-normal',
-              !date && 'text-muted-foreground',
-            )}
-          >
-            <CalendarIcon />
-            {format(date, "d 'de' MMM 'de' yyyy", { locale: ptBR })}
-          </Button>
+          {disabled ? (
+            <Button variant={'outline'} disabled className="flex-1">
+              Indeterminado
+            </Button>
+          ) : (
+            <Button
+              variant={'outline'}
+              className={cn(
+                'flex-1 justify-start text-left font-normal',
+                !date && 'text-muted-foreground',
+              )}
+            >
+              <CalendarIcon />
+              {format(date, "d 'de' MMM 'de' yyyy", { locale: ptBR })}
+            </Button>
+          )}
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar

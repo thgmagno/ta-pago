@@ -6,6 +6,7 @@ import {
   ReserveStatus,
 } from '@prisma/client'
 import { z } from 'zod'
+import { parseDate } from '../utils'
 
 // Validação para Payment
 export const PaymentSchema = z.object({
@@ -27,12 +28,9 @@ export const PaymentSchema = z.object({
   categoryId: z.string().optional(),
   paidAt: z
     .string()
-    .transform((val) => (val ? new Date(val) : undefined))
+    .transform((val) => (val ? parseDate(val) : undefined))
     .pipe(z.date().optional()),
-  scheduledDate: z
-    .string()
-    .transform((val) => new Date(val))
-    .pipe(z.date()),
+  scheduledDate: z.string().transform(parseDate).pipe(z.date()),
   paymentMethod: z
     .enum(
       [...Object.values(PaymentMethodType)] as [
@@ -68,12 +66,9 @@ export const ReceiptSchema = z.object({
   categoryId: z.string().optional(),
   receivedAt: z
     .string()
-    .transform((val) => (val ? new Date(val) : undefined))
+    .transform((val) => (val ? parseDate(val) : undefined))
     .pipe(z.date().optional()),
-  scheduledDate: z
-    .string()
-    .transform((val) => new Date(val))
-    .pipe(z.date()),
+  scheduledDate: z.string().transform(parseDate).pipe(z.date()),
   receiptMethod: z
     .enum(
       [...Object.values(ReceiptMethodType)] as [
@@ -120,18 +115,17 @@ export const ReserveSchema = z
         ),
       )
       .refine((val) => !isNaN(val), { message: 'O valor deve ser um número' }),
-    startDate: z
-      .string()
-      .transform((val) => new Date(val))
-      .pipe(z.date()),
-    endDate: z
-      .string()
-      .transform((val) => new Date(val))
-      .pipe(z.date().optional()),
+    startDate: z.string().transform(parseDate).pipe(z.date()),
+    endDate: z.string().transform(parseDate).pipe(z.date().optional()),
     status: z.enum(
       [...Object.values(ReserveStatus)] as [ReserveStatus, ...ReserveStatus[]],
       { message: 'Status de reserva inválido' },
     ),
+    indeterminate: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => Boolean(val === 'y')),
   })
   .superRefine(({ startDate, endDate }, ctx) => {
     if (endDate && endDate < startDate) {

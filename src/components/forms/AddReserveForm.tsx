@@ -1,9 +1,10 @@
 'use client'
 
 import { actions } from '@/actions'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { CardWithFooter } from './CardForm'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { ErrorMessageForm } from './ErrorMessageForm'
 import CurrencyInput from '@/components/CurrencyInput'
@@ -51,6 +52,8 @@ export function ReserveForm({
   reserve?: ReservationComplete
   categories: Category[]
 }) {
+  const [indeterminate, setIndeterminate] = useState(!reserve?.endDate)
+
   return (
     <form action={action}>
       <div className="grid w-full items-center gap-4">
@@ -92,8 +95,24 @@ export function ReserveForm({
 
           {/* endDate */}
           <div className="flex flex-1 flex-col space-y-2">
-            <Label>Data do término</Label>
-            <DateInput name="endDate" defaultValue={reserve?.endDate} />
+            <Label>Data do término:</Label>
+            <div className="flex items-center gap-2">
+              <DateInput
+                name="endDate"
+                defaultValue={reserve?.endDate}
+                disabled={indeterminate}
+              />
+              <input
+                type="hidden"
+                name="indeterminate"
+                value={indeterminate ? 'y' : 'n'}
+              />
+              <Switch
+                id="endDate"
+                checked={!indeterminate}
+                onCheckedChange={() => setIndeterminate(!indeterminate)}
+              />
+            </div>
             <ErrorMessageForm message={formState.errors.endDate} />
           </div>
         </div>

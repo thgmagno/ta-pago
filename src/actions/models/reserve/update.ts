@@ -47,7 +47,7 @@ export async function update(
         amount: parsed.data.amount,
         yield: parsed.data.yield,
         startDate: parsed.data.startDate,
-        endDate: parsed.data.endDate,
+        endDate: parsed.data.indeterminate ? undefined : parsed.data.endDate,
         status: parsed.data.status,
       },
     })

@@ -36,6 +36,7 @@ export interface ReserveFormState {
     startDate?: string[]
     endDate?: string[]
     status?: string[]
+    indeterminate?: string[]
     _form?: string
   }
 }
