@@ -18,8 +18,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { dict } from '@/lib/dict'
-import { Payment, Transaction } from '@prisma/client'
 import { PaymentFormState } from '@/lib/states/transactions'
+import { PaymentComplete } from '@/lib/types'
 
 export function AddPaymentForm() {
   const [formState, action, isPending] = useActionState(
@@ -36,12 +36,12 @@ export function PaymentForm({
   formState,
   action,
   isPending,
-  transaction,
+  payment,
 }: {
   formState: PaymentFormState
   action: (payload: FormData) => void
   isPending: boolean
-  transaction?: Transaction & { payment: Payment }
+  payment?: PaymentComplete
 }) {
   return (
     <form action={action}>
@@ -52,7 +52,7 @@ export function PaymentForm({
           <Input
             id="description"
             placeholder="Descrição do pagamento (opcional)"
-            defaultValue={transaction?.description ?? ''}
+            defaultValue={payment?.transaction?.description ?? ''}
           />
           <ErrorMessageForm message={formState.errors.description} />
         </div>
@@ -60,10 +60,7 @@ export function PaymentForm({
         {/* Amount */}
         <div className="flex flex-col space-y-2">
           <Label>Valor</Label>
-          <CurrencyInput
-            name="amount"
-            defaultValue={transaction?.payment.amount}
-          />
+          <CurrencyInput name="amount" defaultValue={payment?.amount} />
           <ErrorMessageForm message={formState.errors.amount} />
         </div>
 
@@ -71,10 +68,7 @@ export function PaymentForm({
           {/* paidAt */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Data do pagamento</Label>
-            <DateInput
-              name="paidAt"
-              defaultValue={transaction?.payment.paidAt}
-            />
+            <DateInput name="paidAt" defaultValue={payment?.paidAt} />
             <ErrorMessageForm message={formState.errors.paidAt} />
           </div>
 
@@ -83,7 +77,7 @@ export function PaymentForm({
             <Label>Data do vencimento</Label>
             <DateInput
               name="scheduledDate"
-              defaultValue={transaction?.payment.scheduledDate}
+              defaultValue={payment?.scheduledDate}
             />
             <ErrorMessageForm message={formState.errors.scheduledDate} />
           </div>
@@ -93,10 +87,7 @@ export function PaymentForm({
           {/* categoryId */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Categoria</Label>
-            <Select
-              name="category"
-              defaultValue={transaction?.categoryId ?? ''}
-            >
+            <Select name="category">
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar categoria" />
               </SelectTrigger>
@@ -112,10 +103,7 @@ export function PaymentForm({
           {/* paymentMethod */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Método</Label>
-            <Select
-              name="paymentMethod"
-              defaultValue={transaction?.payment.paymentMethod}
-            >
+            <Select name="paymentMethod" defaultValue={payment?.paymentMethod}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar método" />
               </SelectTrigger>
@@ -138,7 +126,7 @@ export function PaymentForm({
           {/* status */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Status</Label>
-            <Select name="status" defaultValue={transaction?.payment.status}>
+            <Select name="status" defaultValue={payment?.status}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar status" />
               </SelectTrigger>

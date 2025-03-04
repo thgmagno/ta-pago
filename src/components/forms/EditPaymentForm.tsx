@@ -1,15 +1,11 @@
 'use client'
 
-import { Payment, Transaction } from '@prisma/client'
 import { actions } from '@/actions'
 import { useActionState } from 'react'
 import { PaymentForm } from './AddPaymentForm'
+import { PaymentComplete } from '@/lib/types'
 
-export function EditPaymentForm({
-  transaction,
-}: {
-  transaction?: Transaction & { payment: Payment }
-}) {
+export function EditPaymentForm({ payment }: { payment?: PaymentComplete }) {
   const [formState, action, isPending] = useActionState(
     actions.transactions.payment.create,
     { errors: {} },
@@ -20,7 +16,7 @@ export function EditPaymentForm({
       formState={formState}
       action={action}
       isPending={isPending}
-      transaction={transaction}
+      payment={payment}
     />
   )
 }

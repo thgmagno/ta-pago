@@ -8,8 +8,6 @@ import clsx from 'clsx'
 export default async function PaymentsPage() {
   const transactions = await actions.transactions.payment.findAll()
 
-  console.log(transactions)
-
   return (
     <section className="page">
       <Link

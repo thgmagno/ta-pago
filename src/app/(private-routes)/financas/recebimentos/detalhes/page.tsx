@@ -1,18 +1,17 @@
 import { buttonVariants } from '@/components/ui/button'
+import { SearchParams } from '@/lib/types'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-export default async function DetailsReservePage({
-  params,
-}: {
-  params: Promise<{ id: string }>
+export default async function DetailsReceiptPage(props: {
+  searchParams: SearchParams
 }) {
-  const id = (await params).id
+  const searchParams = await props.searchParams
 
   return (
     <section className="page">
       <Link
-        href="/financas/reservas"
+        href="/financas/recebimentos"
         className={clsx(
           'ml-auto',
           buttonVariants({ variant: 'outline', size: 'sm' }),
@@ -20,7 +19,7 @@ export default async function DetailsReservePage({
       >
         Voltar
       </Link>
-      <p>Reserve {id}</p>
+      <p>Receipt {searchParams.id}</p>
     </section>
   )
 }

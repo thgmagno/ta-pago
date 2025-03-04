@@ -10,21 +10,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { dict } from '@/lib/dict'
-import { Reserve } from '@prisma/client'
+import { ReservationComplete } from '@/lib/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export const columns: ColumnDef<
-  Reserve & {
-    transaction: {
-      description: string | null
-      category: {
-        name: string
-      } | null
-    } | null
-  }
->[] = [
+export const columns: ColumnDef<ReservationComplete>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
@@ -79,8 +70,8 @@ export const columns: ColumnDef<
     enableHiding: false,
     cell: ({ row }) => {
       const reserve = row.original
-      const editUrl = `/financas/reservas/${reserve.id}`
-      const detailsUrl = `/financas/reservas/detalhes/${reserve.id}`
+      const editUrl = `/financas/reservas/editar?id=${reserve.id}`
+      const detailsUrl = `/financas/reservas/detalhes?id=${reserve.id}`
       const { replace } = useRouter()
 
       return (

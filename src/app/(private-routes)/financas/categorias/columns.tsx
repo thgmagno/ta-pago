@@ -24,7 +24,7 @@ export const columns: ColumnDef<Category>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const category = row.original
-      const editUrl = `/financas/categorias/${category.id}`
+      const editUrl = `/financas/categorias/editar?id=${category.id}`
       const { replace } = useRouter()
 
       return (

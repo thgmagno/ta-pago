@@ -10,21 +10,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { dict } from '@/lib/dict'
-import { Payment } from '@prisma/client'
+import { PaymentComplete } from '@/lib/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export const columns: ColumnDef<
-  Payment & {
-    transaction: {
-      description: string | null
-      category: {
-        name: string
-      } | null
-    } | null
-  }
->[] = [
+export const columns: ColumnDef<PaymentComplete>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
@@ -79,8 +70,8 @@ export const columns: ColumnDef<
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original
-      const editUrl = `/financas/pagamentos/${payment.id}`
-      const detailsUrl = `/financas/pagamentos/detalhes/${payment.id}`
+      const editUrl = `/financas/pagamentos/editar?id=${payment.id}`
+      const detailsUrl = `/financas/pagamentos/detalhes?id=${payment.id}`
       const { replace } = useRouter()
 
       return (

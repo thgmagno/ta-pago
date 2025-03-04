@@ -1,13 +1,12 @@
 import { buttonVariants } from '@/components/ui/button'
+import { SearchParams } from '@/lib/types'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-export default async function DetailsPaymentPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
+export default async function DetailsPaymentPage(props: {
+  searchParams: SearchParams
 }) {
-  const id = (await params).id
+  const searchParams = await props.searchParams
 
   return (
     <section className="page">
@@ -20,7 +19,7 @@ export default async function DetailsPaymentPage({
       >
         Voltar
       </Link>
-      <p>Payment {id}</p>
+      <p>Payment {searchParams.id}</p>
     </section>
   )
 }

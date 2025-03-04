@@ -76,7 +76,12 @@ export async function findUnique(
     return prisma.reserve.findUnique({
       where: {
         id: reserveId,
-        AND: [{ OR: [{ transaction: { userId, groupId } }] }],
+        OR: [{ transaction: { userId, groupId } }],
+      },
+      include: {
+        transaction: {
+          include: { category: true },
+        },
       },
     })
   }, 'Reserva encontrada com sucesso')
@@ -102,7 +107,7 @@ export async function findAll(params: FindAllParameters) {
       },
       include: {
         transaction: {
-          include: { category: { select: { name: true } } },
+          include: { category: true },
         },
       },
       orderBy: {

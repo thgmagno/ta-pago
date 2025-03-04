@@ -20,7 +20,7 @@ export function Breadcrumb() {
   if (lastSegmentIsID) pathSegments[pathSegments.length - 1] = 'Editar'
 
   return (
-    <BreadcrumbCn className="border p-3 pl-5">
+    <BreadcrumbCn className="p-3 pl-5">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
@@ -34,7 +34,7 @@ export function Breadcrumb() {
 
           return (
             <div key={href} className="flex items-center">
-              <BreadcrumbSeparator />
+              <BreadcrumbSeparator className="mr-2" />
               <BreadcrumbItem>
                 {isLast ? (
                   <BreadcrumbPage className="cursor-default capitalize select-none">
