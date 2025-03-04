@@ -77,6 +77,7 @@ export async function findAll(params: FindAllParameters) {
       where: {
         transaction: {
           type: 'RESERVATION',
+          deletedAt: null,
           OR: [{ userId: params.userId }, { groupId: params.groupId }],
         },
         startDate: {

@@ -75,6 +75,7 @@ export async function findAll(params: FindAllParameters) {
       where: {
         transaction: {
           type: 'RECEIPT',
+          deletedAt: null,
           OR: [{ userId: params.userId }, { groupId: params.groupId }],
         },
         receivedAt: {

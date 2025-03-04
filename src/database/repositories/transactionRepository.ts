@@ -47,3 +47,35 @@ export async function findTransactionByReserveId(
     })
   }, 'Busca realizada com sucesso')
 }
+
+export async function setExcluded(
+  transactionId: string,
+  userId: string,
+  groupId?: string | null,
+) {
+  return handleDatabaseOperation(async () => {
+    return await prisma.transaction.update({
+      where: {
+        id: transactionId,
+        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+      },
+      data: { deletedAt: new Date() },
+    })
+  }, 'Transação excluída com sucesso')
+}
+
+export async function restoreTransactionExcluded(
+  transactionId: string,
+  userId: string,
+  groupId?: string | null,
+) {
+  return handleDatabaseOperation(async () => {
+    return await prisma.transaction.update({
+      where: {
+        id: transactionId,
+        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+      },
+      data: { deletedAt: null },
+    })
+  }, 'Transação restaurada com sucesso')
+}

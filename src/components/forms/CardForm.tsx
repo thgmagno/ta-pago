@@ -8,11 +8,13 @@ import { useRouter } from 'next/navigation'
 
 export function CardWithForm({
   children,
+  className,
 }: Readonly<{
   children: React.ReactNode
+  className?: string
 }>) {
   return (
-    <Card className="mx-auto w-full max-w-4xl sm:w-[90%]">
+    <Card className={`mx-auto w-full max-w-4xl sm:w-[90%] ${className || ''}`}>
       <CardContent>{children}</CardContent>
     </Card>
   )
