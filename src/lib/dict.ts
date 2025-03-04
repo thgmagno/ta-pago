@@ -27,20 +27,17 @@ export const dict = {
   PaymentStatus: [
     { value: PaymentStatus.PENDING, label: 'Pendente' },
     { value: PaymentStatus.PAID, label: 'Pago' },
-    { value: PaymentStatus.CANCELLED, label: 'Cancelado' },
   ],
 
   ReceiptStatus: [
     { value: ReceiptStatus.PENDING, label: 'Pendente' },
     { value: ReceiptStatus.RECEIVED, label: 'Recebido' },
-    { value: ReceiptStatus.CANCELLED, label: 'Cancelado' },
   ],
 
   ReserveStatus: [
     { value: ReserveStatus.PENDING, label: 'Pendente' },
     { value: ReserveStatus.ACTIVE, label: 'Ativo' },
     { value: ReserveStatus.REDEEMED, label: 'Resgatado' },
-    { value: PaymentStatus.CANCELLED, label: 'Cancelado' },
   ],
 
   TransactionTypes: {
