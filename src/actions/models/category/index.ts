@@ -1,5 +1,3 @@
 export * from './create'
-export * from './edit'
-export * from './destroy'
-export * from './findUnique'
 export * from './findAll'
+export * from './findUnique'

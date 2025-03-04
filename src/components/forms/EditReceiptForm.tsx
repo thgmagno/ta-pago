@@ -14,7 +14,7 @@ export function EditReceiptForm({
   categories: Category[]
 }) {
   const [formState, action, isPending] = useActionState(
-    actions.transactions.receipt.create,
+    actions.transactions.receipt.update,
     { errors: {} },
   )
 

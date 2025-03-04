@@ -14,7 +14,7 @@ export function EditReserveForm({
   categories: Category[]
 }) {
   const [formState, action, isPending] = useActionState(
-    actions.transactions.reserve.create,
+    actions.transactions.reserve.update,
     { errors: {} },
   )
 

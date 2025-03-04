@@ -14,7 +14,7 @@ export function EditPaymentForm({
   categories: Category[]
 }) {
   const [formState, action, isPending] = useActionState(
-    actions.transactions.payment.create,
+    actions.transactions.payment.update,
     { errors: {} },
   )
 
