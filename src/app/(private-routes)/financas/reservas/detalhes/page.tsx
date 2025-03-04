@@ -30,7 +30,7 @@ export default async function DetailsReservePage(props: {
         href={baseUrl}
         className={clsx(
           'ml-auto',
-          buttonVariants({ variant: 'outline', size: 'sm' }),
+          buttonVariants({ variant: 'outline' }),
         )}
       >
         Voltar

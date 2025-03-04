@@ -15,7 +15,7 @@ export default async function CategoriesPage() {
         href={'/financas/categorias/adicionar'}
         className={clsx(
           'ml-auto w-fit',
-          buttonVariants({ variant: 'outline', size: 'sm' }),
+          buttonVariants({ variant: 'outline' }),
         )}
       >
         Adicionar

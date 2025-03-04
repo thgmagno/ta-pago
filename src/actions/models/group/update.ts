@@ -7,7 +7,7 @@ import { GroupFormState } from '@/lib/states/groups'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function create(
+export async function update(
   formState: GroupFormState,
   formData: FormData,
 ): Promise<GroupFormState> {
@@ -20,12 +20,19 @@ export async function create(
   try {
     const user = await actions.session.getServerSession()
 
-    await repositories.groups.group.create({
-      creatorUserId: user.id,
-      name: parsed.data.name,
-      description: parsed.data.description,
-      visibility: parsed.data.visibility,
-    })
+    if (!parsed.data.id) {
+      return { errors: { _form: 'Parâmetros inválidos' } }
+    }
+
+    await repositories.groups.group.update(
+      {
+        name: parsed.data.name,
+        description: parsed.data.description,
+        visibility: parsed.data.visibility,
+      },
+      user.id,
+      parsed.data.id,
+    )
   } catch (error) {
     if (error instanceof Error) {
       return {

@@ -47,3 +47,11 @@ export const parseDate = (dateString: string): Date => {
   date.setUTCHours(12, 0, 0, 0)
   return date
 }
+
+export function getUserName(username?: string | null) {
+  if (!username) return 'Olá'
+  const nameSplited = username.split(' ')
+  const firstName = nameSplited.shift()
+  const lastName = nameSplited.slice(1).pop()
+  return `${firstName} ${lastName || ''}`.trim()
+}

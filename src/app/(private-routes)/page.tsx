@@ -1,4 +1,5 @@
 import { auth } from '@/auth'
+import { getUserName } from '@/lib/utils'
 
 export default async function IndexPage() {
   const user = await auth().then((session) => session?.user)
@@ -15,12 +16,4 @@ export default async function IndexPage() {
       </ul>
     </section>
   )
-}
-
-function getUserName(username?: string | null) {
-  if (!username) return 'Olá'
-  const nameSplited = username.split(' ')
-  const firstName = nameSplited.shift()
-  const lastName = nameSplited.slice(1).pop()
-  return `${firstName} ${lastName || ''}`.trim()
 }

@@ -29,7 +29,7 @@ export default async function DetailsReceiptPage(props: {
         href={baseUrl}
         className={clsx(
           'ml-auto',
-          buttonVariants({ variant: 'outline', size: 'sm' }),
+          buttonVariants({ variant: 'outline' }),
         )}
       >
         Voltar

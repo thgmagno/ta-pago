@@ -14,7 +14,7 @@ export default async function ReservesPage() {
         href="/financas/reservas/adicionar"
         className={clsx(
           'ml-auto',
-          buttonVariants({ variant: 'outline', size: 'sm' }),
+          buttonVariants({ variant: 'outline' }),
         )}
       >
         Adicionar

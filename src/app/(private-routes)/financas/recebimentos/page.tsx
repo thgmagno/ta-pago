@@ -14,7 +14,7 @@ export default async function ReceiptsPage() {
         href="/financas/recebimentos/adicionar"
         className={clsx(
           'ml-auto',
-          buttonVariants({ variant: 'outline', size: 'sm' }),
+          buttonVariants({ variant: 'outline' }),
         )}
       >
         Adicionar

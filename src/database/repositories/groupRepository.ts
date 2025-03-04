@@ -7,18 +7,35 @@ export async function create(
   group: Pick<Group, 'name' | 'creatorUserId' | 'description' | 'visibility'>,
 ) {
   return handleDatabaseOperation(async () => {
-    const tag = await generateUniqueTag()
-    return await prisma.group.create({ data: { ...group, tag } })
+    return await prisma.$transaction(async (tx) => {
+      const tag = await generateUniqueTag()
+
+      const newGroup = await tx.group.create({ data: { ...group, tag } })
+
+      await tx.groupMember.create({
+        data: {
+          userId: group.creatorUserId,
+          additionDate: new Date(),
+          groupId: newGroup.id,
+          role: 'ADMIN',
+        },
+      })
+
+      return await tx.user.update({
+        where: { id: group.creatorUserId },
+        data: { groupId: newGroup.id },
+      })
+    })
   }, 'Grupo criado com sucesso')
 }
 
-export async function edit(
+export async function update(
   data: Partial<Group>,
   creatorUserId: string,
   groupId: string,
 ) {
   return handleDatabaseOperation(async () => {
-    return await prisma.group.updateMany({
+    return await prisma.group.update({
       where: {
         id: groupId,
         creatorUserId,
@@ -39,20 +56,16 @@ export async function destroy(groupId: string, creatorUserId: string) {
   }, 'Grupo excluído com sucesso')
 }
 
-export async function listMembers(groupId: string) {
+export async function findGroupWithMembers(groupId: string) {
   return handleDatabaseOperation(async () => {
-    return await prisma.groupMember.findMany({
-      where: { groupId },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    })
+    const [members, group] = await Promise.all([
+      prisma.user.findMany({
+        where: { groupId },
+      }),
+      prisma.group.findUnique({ where: { id: groupId } }),
+    ])
+
+    return { members, group }
   }, 'Membros do grupo listados com sucesso')
 }
 
@@ -74,8 +87,8 @@ async function generateUniqueTag(): Promise<string> {
   let tagUnica = ''
   let tagExiste = true
 
-  while (tagExiste) {
-    tagUnica = nanoid(4)
+  while (tagExiste || tagUnica.length < 6) {
+    tagUnica = nanoid(6)
       .replace(/[^A-Z0-9]/g, '')
       .toUpperCase()
     const tagExistente = await prisma.group.findUnique({

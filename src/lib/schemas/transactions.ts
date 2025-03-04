@@ -11,7 +11,10 @@ import { parseDate } from '../utils'
 // Validação para Payment
 export const PaymentSchema = z.object({
   id: z.string().optional(),
-  description: z.string().optional(),
+  description: z
+    .string()
+    .max(30, { message: 'A descrição excede o limite de 60 caracteres' })
+    .optional(),
   amount: z
     .string()
     .min(1, { message: 'O valor é obrigatório' })
@@ -49,7 +52,10 @@ export const PaymentSchema = z.object({
 // Validação para Receipt
 export const ReceiptSchema = z.object({
   id: z.string().optional(),
-  description: z.string().optional(),
+  description: z
+    .string()
+    .max(30, { message: 'A descrição excede o limite de 60 caracteres' })
+    .optional(),
   amount: z
     .string()
     .min(1, { message: 'O valor é obrigatório' })
@@ -88,7 +94,10 @@ export const ReceiptSchema = z.object({
 export const ReserveSchema = z
   .object({
     id: z.string().optional(),
-    description: z.string().optional(),
+    description: z
+      .string()
+      .max(30, { message: 'A descrição excede o limite de 60 caracteres' })
+      .optional(),
     amount: z
       .string()
       .min(1, { message: 'O valor é obrigatório' })
