@@ -1,7 +1,15 @@
 import { actions } from '@/actions'
-import { buttonVariants } from '@/components/ui/button'
+import { CardWithForm } from '@/components/forms/CardForm'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { dict } from '@/lib/dict'
 import { SearchParams } from '@/lib/types'
-import { redirectIfInvalidId } from '@/lib/utils'
+import {
+  formatCurrencyBRL,
+  formatDateBR,
+  redirectIfInvalidId,
+} from '@/lib/utils'
+import { Separator } from '@/components/ui/separator'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -13,6 +21,7 @@ export default async function DetailsPaymentPage(props: {
   const payment = await actions.transactions.payment.findUnique(
     redirectIfInvalidId(searchParams.id, baseUrl),
   )
+  const editUrl = `/financas/pagamentos/editar?id=${payment.id}`
 
   return (
     <section className="page">
@@ -25,7 +34,108 @@ export default async function DetailsPaymentPage(props: {
       >
         Voltar
       </Link>
-      <pre>{JSON.stringify(payment, null, 2)}</pre>
+      <CardWithForm>
+        <form className="flex flex-col space-y-2.5 opacity-95">
+          {/* Tipo */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Tipo:</Label>
+            <p>
+              {payment.transaction?.type
+                ? dict.TransactionTypes[payment.transaction.type]
+                : 'Não informado'}
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Descricao */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Descrição:</Label>
+            <p>{payment.transaction?.description}</p>
+          </div>
+
+          <Separator />
+
+          {/* Categoria */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Categoria:</Label>
+            <p>{payment?.transaction?.category?.name ?? '-'}</p>
+          </div>
+
+          <Separator />
+
+          {/* Data de registro */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Data de registro:</Label>
+            <p>{formatDateBR(payment.transaction?.creationDate)}</p>
+          </div>
+
+          <Separator />
+
+          {/* Data do pagamento */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Data do pagamento:</Label>
+            <p>{payment?.paidAt ? formatDateBR(payment?.paidAt) : '-'}</p>
+          </div>
+
+          <Separator />
+
+          {/* Data do vencimento */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Data do vencimento:</Label>
+            <p>
+              {payment?.scheduledDate
+                ? formatDateBR(payment?.scheduledDate)
+                : '-'}
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Valor */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Valor:</Label>
+            <p>{formatCurrencyBRL(payment?.amount)}</p>
+          </div>
+
+          <Separator />
+
+          {/* Status */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Status:</Label>
+            <p>
+              {payment?.status
+                ? dict.PaymentStatus.find((p) => p.value === payment.status)
+                    ?.label
+                : '-'}
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Metodo */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="font-semibold">Método de pagamento:</Label>
+            <p>
+              {payment?.paymentMethod
+                ? dict.PaymentMethods.find(
+                    (p) => p.value === payment.paymentMethod,
+                  )?.label
+                : '-'}
+            </p>
+          </div>
+
+          <Separator />
+        </form>
+        <div className="mt-5 flex items-center justify-end gap-3">
+          <Button size="sm" variant="destructive">
+            Excluir
+          </Button>
+          <Link href={editUrl} className={buttonVariants({ size: 'sm' })}>
+            Editar
+          </Link>
+        </div>
+      </CardWithForm>
     </section>
   )
 }

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { dict } from '@/lib/dict'
 import { PaymentComplete } from '@/lib/types'
+import { formatCurrencyBRL } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -56,13 +57,11 @@ export const columns: ColumnDef<PaymentComplete>[] = [
     header: () => <div className="text-right">Valor</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('amount'))
-
-      const formatted = new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
+      return (
+        <div className="text-right font-medium">
+          {formatCurrencyBRL(amount)}
+        </div>
+      )
     },
   },
   {

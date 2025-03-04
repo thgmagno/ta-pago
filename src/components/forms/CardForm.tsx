@@ -12,7 +12,7 @@ export function CardWithForm({
   children: React.ReactNode
 }>) {
   return (
-    <Card className="mx-auto max-w-4xl sm:w-[90%]">
+    <Card className="mx-auto w-full max-w-4xl sm:w-[90%]">
       <CardContent>{children}</CardContent>
     </Card>
   )
