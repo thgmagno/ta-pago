@@ -7,7 +7,7 @@ import { ReserveFormState } from '@/lib/states/transactions'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function create(
+export async function update(
   formState: ReserveFormState,
   formData: FormData,
 ): Promise<ReserveFormState> {
@@ -17,17 +17,32 @@ export async function create(
     return { errors: parsed.error.flatten().fieldErrors }
   }
 
+  if (!parsed.data.id) {
+    return { errors: { _form: 'Parâmetros inválidos, tente novamente' } }
+  }
+
   try {
     const user = await actions.session.getServerSession()
 
-    await repositories.transactions.reserve.create({
+    const reserve = await repositories.transactions.reserve.findByTransaction(
+      parsed.data.id,
+      user.id,
+      user.groupId,
+    )
+
+    if (!reserve.data?.id) {
+      return { errors: { _form: 'Pagamento não encontrado' } }
+    }
+
+    await repositories.transactions.reserve.update({
       transaction: {
-        userId: user.id,
+        id: parsed.data.id,
         groupId: user.groupId,
         categoryId: parsed.data.categoryId,
         description: parsed.data.description,
       },
       reserve: {
+        id: reserve.data?.id,
         amount: parsed.data.amount,
         yield: parsed.data.yield,
         startDate: parsed.data.startDate,

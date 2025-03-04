@@ -1,11 +1,30 @@
 import { prisma } from '@/database/prisma'
-import { Reserve, ReserveStatus, Transaction } from '@prisma/client'
+import { ReserveStatus } from '@prisma/client'
 import { handleDatabaseOperation } from '@/database/helper'
 
-interface CreateReservation {
-  transaction: Omit<Transaction, 'id' | 'type'>
-  reserve: Pick<Reserve, 'startDate' | 'status'> &
-    Partial<Pick<Reserve, 'endDate' | 'yield'>>
+type CreateReservation = {
+  transaction: {
+    userId: string
+    groupId?: string | null
+    categoryId?: string | null
+    description?: string | null
+  }
+  reserve: {
+    amount: number
+    yield?: number
+    startDate: Date
+    endDate?: Date
+    status: ReserveStatus
+  }
+}
+
+type UpdateReserve = {
+  transaction: Partial<CreateReservation['transaction']> & {
+    id: string
+  }
+  reserve: Partial<CreateReservation['reserve']> & {
+    id: string
+  }
 }
 
 interface FindAllParameters {
@@ -25,19 +44,19 @@ export async function create(params: CreateReservation) {
       prisma.transaction.create({
         data: {
           type: 'RESERVATION',
-          amount: params.transaction.amount ?? 0,
           categoryId: params.transaction.categoryId,
-          description: params.transaction.description ?? '-',
+          description: params.transaction.description,
           groupId: params.transaction.groupId,
           userId: params.transaction.userId,
         },
       }),
       prisma.reserve.create({
         data: {
+          amount: params.reserve.amount,
+          yield: params.reserve.yield,
           startDate: params.reserve.startDate,
-          status: params.reserve.status,
-          yield: params.reserve.yield ?? 0,
           endDate: params.reserve.endDate,
+          status: params.reserve.status,
           transactionId: undefined,
         },
       }),
@@ -48,43 +67,6 @@ export async function create(params: CreateReservation) {
       data: { transactionId: transaction.id },
     })
   }, 'Reserva criada com sucesso')
-}
-
-export async function edit(
-  reserveId: string,
-  data: Partial<Reserve>,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return prisma.reserve.update({
-      where: {
-        id: reserveId,
-        AND: [{ OR: [{ transaction: { userId, groupId } }] }],
-      },
-      data,
-    })
-  }, 'Reserva editada com sucesso')
-}
-
-export async function findUnique(
-  reserveId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return prisma.reserve.findUnique({
-      where: {
-        id: reserveId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      include: {
-        transaction: {
-          include: { category: true },
-        },
-      },
-    })
-  }, 'Reserva encontrada com sucesso')
 }
 
 export async function findAll(params: FindAllParameters) {
@@ -117,28 +99,69 @@ export async function findAll(params: FindAllParameters) {
   }, 'Busca realizada com sucesso')
 }
 
-export async function destroy(
+export async function findUnique(
   reserveId: string,
   userId?: string,
   groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
-    const reserve = await findUnique(reserveId, userId, groupId)
+    return prisma.reserve.findUnique({
+      where: {
+        id: reserveId,
+        AND: { OR: [{ transaction: { userId, groupId } }] },
+      },
+      include: {
+        transaction: {
+          include: { category: true },
+        },
+      },
+    })
+  }, 'Reserva encontrada com sucesso')
+}
 
-    if (!reserve.data?.transactionId) {
-      throw new Error('Reserva não encontrada')
-    }
+export async function findByTransaction(
+  transactionId: string,
+  userId?: string,
+  groupId?: string | null,
+) {
+  return handleDatabaseOperation(async () => {
+    return await prisma.reserve.findFirst({
+      where: {
+        transactionId,
+        AND: { OR: [{ transaction: { userId, groupId } }] },
+      },
+    })
+  }, 'Busca realizada com sucesso')
+}
 
-    return prisma.$transaction([
-      prisma.reserve.delete({
-        where: {
-          id: reserveId,
-          AND: [{ OR: [{ transaction: { userId, groupId } }] }],
+export async function update(params: UpdateReserve) {
+  return handleDatabaseOperation(async () => {
+    await prisma.$transaction([
+      prisma.transaction.update({
+        where: { id: params.transaction.id },
+        data: {
+          categoryId: params.transaction.categoryId,
+          description: params.transaction.description,
+          groupId: params.transaction.groupId,
+          reserves: {
+            update: {
+              where: {
+                id: params.reserve.id,
+                transactionId: params.transaction.id,
+              },
+              data: {
+                amount: params.reserve.amount,
+                yield: params.reserve.yield,
+                startDate: params.reserve.startDate,
+                endDate: params.reserve.endDate,
+                status: params.reserve.status,
+              },
+            },
+          },
         },
       }),
-      prisma.transaction.delete({
-        where: { id: reserve.data.transactionId },
-      }),
     ])
-  }, 'Reserva deletada com sucesso')
+  }, 'Pagamento atualizado com sucesso')
 }
+
+export async function updateInBatch() {}

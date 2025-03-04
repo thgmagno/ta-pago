@@ -1,10 +1,30 @@
 import { prisma } from '@/database/prisma'
-import { Transaction, Payment, PaymentStatus } from '@prisma/client'
 import { handleDatabaseOperation } from '@/database/helper'
+import { PaymentMethodType, PaymentStatus } from '@prisma/client'
 
-interface CreatePayment {
-  transaction: Omit<Transaction, 'id' | 'type'>
-  payment: Omit<Payment, 'id' | 'transactionId' | 'transaction'>
+type CreatePayment = {
+  transaction: {
+    userId: string
+    groupId?: string | null
+    categoryId?: string | null
+    description?: string | null
+  }
+  payment: {
+    paidAt?: Date
+    scheduledDate: Date
+    amount: number
+    status: PaymentStatus
+    paymentMethod?: PaymentMethodType
+  }
+}
+
+type UpdatePayment = {
+  transaction: Partial<CreatePayment['transaction']> & {
+    id: string
+  }
+  payment: Partial<CreatePayment['payment']> & {
+    id: string
+  }
 }
 
 interface FindAllParameters {
@@ -24,17 +44,17 @@ export async function create(params: CreatePayment) {
       prisma.transaction.create({
         data: {
           type: 'PAYMENT',
-          amount: params.transaction.amount ?? 0,
           categoryId: params.transaction.categoryId,
-          description: params.transaction.description ?? '-',
+          description: params.transaction.description,
           groupId: params.transaction.groupId,
           userId: params.transaction.userId,
         },
       }),
       prisma.payment.create({
         data: {
-          dueDate: params.payment.dueDate,
-          amountPaid: params.payment.amountPaid,
+          paidAt: params.payment.paidAt,
+          scheduledDate: params.payment.scheduledDate,
+          amount: params.payment.amount,
           status: params.payment.status,
           paymentMethod: params.payment.paymentMethod,
           transactionId: undefined,
@@ -47,75 +67,6 @@ export async function create(params: CreatePayment) {
       data: { transactionId: transaction.id },
     })
   }, 'Pagamento criado com sucesso')
-}
-
-export async function edit(
-  paymentId: string,
-  data: Partial<Payment>,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.payment.update({
-      where: {
-        id: paymentId,
-        AND: [{ OR: [{ transaction: { userId, groupId } }] }],
-      },
-      data,
-    })
-  }, 'Pagamento editado com sucesso')
-}
-
-export async function confirm(
-  paymentId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.payment.update({
-      where: {
-        id: paymentId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      data: { status: 'PAID' },
-    })
-  }, 'Pagamento confirmado com sucesso')
-}
-
-export async function cancel(
-  paymentId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.payment.update({
-      where: {
-        id: paymentId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      data: { status: 'CANCELLED' },
-    })
-  }, 'Pagamento cancelado com sucesso')
-}
-
-export async function findUnique(
-  paymentId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.payment.findUnique({
-      where: {
-        id: paymentId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      include: {
-        transaction: {
-          include: { category: true },
-        },
-      },
-    })
-  }, 'Pagamento encontrado com sucesso')
 }
 
 export async function findAll(params: FindAllParameters) {
@@ -148,28 +99,69 @@ export async function findAll(params: FindAllParameters) {
   }, 'Busca realizada com sucesso')
 }
 
-export async function destroy(
+export async function findUnique(
   paymentId: string,
   userId?: string,
   groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
-    const payment = await findUnique(paymentId, userId, groupId)
+    return await prisma.payment.findUnique({
+      where: {
+        id: paymentId,
+        AND: { OR: [{ transaction: { userId, groupId } }] },
+      },
+      include: {
+        transaction: {
+          include: { category: true },
+        },
+      },
+    })
+  }, 'Pagamento encontrado com sucesso')
+}
 
-    if (!payment?.data?.transactionId) {
-      throw new Error('Pagamento não encontrado')
-    }
+export async function findByTransaction(
+  transactionId: string,
+  userId?: string,
+  groupId?: string | null,
+) {
+  return handleDatabaseOperation(async () => {
+    return await prisma.payment.findFirst({
+      where: {
+        transactionId,
+        AND: { OR: [{ transaction: { userId, groupId } }] },
+      },
+    })
+  }, 'Busca realizada com sucesso')
+}
 
-    return prisma.$transaction([
-      prisma.payment.delete({
-        where: {
-          id: paymentId,
-          AND: [{ OR: [{ transaction: { userId, groupId } }] }],
+export async function update(params: UpdatePayment) {
+  return handleDatabaseOperation(async () => {
+    await prisma.$transaction([
+      prisma.transaction.update({
+        where: { id: params.transaction.id },
+        data: {
+          categoryId: params.transaction.categoryId,
+          description: params.transaction.description,
+          groupId: params.transaction.groupId,
+          payments: {
+            update: {
+              where: {
+                id: params.payment.id,
+                transactionId: params.transaction.id,
+              },
+              data: {
+                paidAt: params.payment.paidAt,
+                scheduledDate: params.payment.scheduledDate,
+                amount: params.payment.amount,
+                status: params.payment.status,
+                paymentMethod: params.payment.paymentMethod,
+              },
+            },
+          },
         },
       }),
-      prisma.transaction.delete({
-        where: { id: payment.data.transactionId },
-      }),
     ])
-  }, 'Pagamento deletado com sucesso')
+  }, 'Pagamento atualizado com sucesso')
 }
+
+export async function updateInBatch() {}

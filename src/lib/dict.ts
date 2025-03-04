@@ -4,7 +4,6 @@ import {
   ReceiptMethodType,
   ReceiptStatus,
   ReserveStatus,
-  TransactionType,
 } from '@prisma/client'
 
 export const dict = {
@@ -41,6 +40,7 @@ export const dict = {
     { value: ReserveStatus.PENDING, label: 'Pendente' },
     { value: ReserveStatus.ACTIVE, label: 'Ativo' },
     { value: ReserveStatus.REDEEMED, label: 'Resgatado' },
+    { value: PaymentStatus.CANCELLED, label: 'Cancelado' },
   ],
 
   TransactionTypes: {

@@ -1,66 +1,117 @@
+import {
+  PaymentMethodType,
+  PaymentStatus,
+  ReceiptMethodType,
+  ReceiptStatus,
+  ReserveStatus,
+} from '@prisma/client'
 import { z } from 'zod'
 
 // Validação para Payment
 export const PaymentSchema = z.object({
-  paidAt: z.date({ message: 'A data de pagamento é inválida' }).optional(),
-  scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
+  id: z.string().cuid().optional(),
+  description: z.string().optional(),
   amount: z
     .string()
-    .min(1, { message: 'O valor pago é obrigatório' })
+    .min(1, { message: 'O valor é obrigatório' })
     .refine((val) => !isNaN(Number(val)), {
-      message: 'O valor pago deve ser um número',
+      message: 'O valor deve ser um número',
     })
     .transform((val) => Number(val))
-    .refine((val) => val > 0, { message: 'O valor pago deve ser positivo' }),
-  status: z.string().min(1, { message: 'O status do pagamento é obrigatório' }),
-  paymentMethod: z
-    .string()
-    .min(1, { message: 'O método de pagamento é obrigatório' }),
+    .refine((val) => val > 0, { message: 'O valor deve ser maior que zero' }),
   categoryId: z.string().optional(),
-  description: z.string().optional(),
+  paidAt: z.date({ message: 'A data de pagamento é inválida' }).optional(),
+  scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
+  paymentMethod: z
+    .enum(
+      [...Object.values(PaymentMethodType)] as [
+        PaymentMethodType,
+        ...PaymentMethodType[],
+      ],
+      { message: 'Método de pagamento inválido' },
+    )
+    .optional(),
+  status: z.enum(
+    [...Object.values(PaymentStatus)] as [PaymentStatus, ...PaymentStatus[]],
+    { message: 'Status de pagamento inválido' },
+  ),
 })
 
 // Validação para Receipt
 export const ReceiptSchema = z.object({
+  id: z.string().cuid().optional(),
+  description: z.string().optional(),
+  amount: z
+    .string()
+    .min(1, { message: 'O valor é obrigatório' })
+    .refine((val) => !isNaN(Number(val)), {
+      message: 'O valor deve ser um número',
+    })
+    .transform((val) => Number(val))
+    .refine((val) => val > 0, {
+      message: 'O valor deve ser maior que zero',
+    }),
+  categoryId: z.string().optional(),
   receivedAt: z
     .date({ message: 'A data de recebimento é inválida' })
     .optional(),
   scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
-  amount: z
-    .string()
-    .min(1, { message: 'O valor recebido é obrigatório' })
-    .refine((val) => !isNaN(Number(val)), {
-      message: 'O valor recebido deve ser um número',
-    })
-    .transform((val) => Number(val))
-    .refine((val) => val > 0, {
-      message: 'O valor recebido deve ser positivo',
-    }),
-  status: z.string().min(1, { message: 'O status do recibo é obrigatório' }),
   receiptMethod: z
-    .string()
-    .min(1, { message: 'O método de recebimento é obrigatório' }),
+    .enum(
+      [...Object.values(ReceiptMethodType)] as [
+        ReceiptMethodType,
+        ...ReceiptMethodType[],
+      ],
+      { message: 'Método de recebimento inválido' },
+    )
+    .optional(),
+  status: z.enum(
+    [...Object.values(ReceiptStatus)] as [ReceiptStatus, ...ReceiptStatus[]],
+    { message: 'Status de recebimento inválido' },
+  ),
 })
 
 // Validação para Reserve
-export const ReserveSchema = z.object({
-  startDate: z.date({ message: 'A data de início da reserva é obrigatória' }),
-  endDate: z
-    .date()
-    .optional()
-    .refine((val) => val === null || (val && val > new Date()), {
-      message:
-        'A data de término da reserva não pode ser anterior à data de início',
-    }),
-  yield: z
-    .string()
-    .min(1, { message: 'O rendimento é obrigatório' })
-    .refine((val) => !isNaN(Number(val)), {
-      message: 'O rendimento deve ser um número',
-    })
-    .transform((val) => Number(val))
-    .refine((val) => val > 0, {
-      message: 'O rendimento deve ser um valor positivo',
-    }),
-  status: z.string().min(1, { message: 'O status da reserva é obrigatório' }),
-})
+export const ReserveSchema = z
+  .object({
+    id: z.string().cuid().optional(),
+    description: z.string().optional(),
+    amount: z
+      .string()
+      .min(1, { message: 'O valor é obrigatório' })
+      .refine((val) => !isNaN(Number(val)), {
+        message: 'O valor deve ser um número',
+      })
+      .transform((val) => Number(val))
+      .refine((val) => val > 0, {
+        message: 'O valor deve ser maior que zero',
+      }),
+    categoryId: z.string().optional(),
+    yield: z
+      .string()
+      .optional()
+      .refine(
+        (val) => val === undefined || val.trim() === '' || !isNaN(Number(val)),
+        {
+          message: 'O rendimento deve ser um número',
+        },
+      )
+      .transform((val) =>
+        val !== undefined && val.trim() !== '' ? Number(val) : undefined,
+      ),
+    startDate: z.date({ message: 'A data de início é obrigatória' }),
+    endDate: z.date().optional(),
+    status: z.enum(
+      [...Object.values(ReserveStatus)] as [ReserveStatus, ...ReserveStatus[]],
+      { message: 'Status de reserva inválido' },
+    ),
+  })
+  .superRefine(({ startDate, endDate }, ctx) => {
+    if (endDate && endDate < startDate) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['endDate'],
+        message: 'A data de término não pode ser anterior à data de início',
+      })
+    }
+  })

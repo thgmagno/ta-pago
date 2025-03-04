@@ -27,8 +27,8 @@ export interface ReceiptFormState {
 export interface ReserveFormState {
   errors: {
     description?: string[]
-    categoryId?: string[]
     amount?: string[]
+    categoryId?: string[]
     yield?: string[]
     startDate?: string[]
     endDate?: string[]

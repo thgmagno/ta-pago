@@ -7,7 +7,7 @@ import { ReceiptFormState } from '@/lib/states/transactions'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function create(
+export async function update(
   formState: ReceiptFormState,
   formData: FormData,
 ): Promise<ReceiptFormState> {
@@ -17,17 +17,32 @@ export async function create(
     return { errors: parsed.error.flatten().fieldErrors }
   }
 
+  if (!parsed.data.id) {
+    return { errors: { _form: 'Parâmetros inválidos, tente novamente' } }
+  }
+
   try {
     const user = await actions.session.getServerSession()
 
-    await repositories.transactions.receipt.create({
+    const receipt = await repositories.transactions.receipt.findByTransaction(
+      parsed.data.id,
+      user.id,
+      user.groupId,
+    )
+
+    if (!receipt.data?.id) {
+      return { errors: { _form: 'Pagamento não encontrado' } }
+    }
+
+    await repositories.transactions.receipt.update({
       transaction: {
-        userId: user.id,
+        id: parsed.data.id,
         groupId: user.groupId,
         categoryId: parsed.data.categoryId,
         description: parsed.data.description,
       },
       receipt: {
+        id: receipt.data?.id,
         receivedAt: parsed.data.receivedAt,
         scheduledDate: parsed.data.scheduledDate,
         amount: parsed.data.amount,

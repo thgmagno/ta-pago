@@ -333,4 +333,5 @@ enum ReserveStatus {
   PENDING
   ACTIVE
   REDEEMED
+  CANCELLED
 }

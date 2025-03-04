@@ -1,10 +1,30 @@
 import { prisma } from '@/database/prisma'
-import { Transaction, Receipt, ReceiptStatus } from '@prisma/client'
+import { ReceiptMethodType, ReceiptStatus } from '@prisma/client'
 import { handleDatabaseOperation } from '@/database/helper'
 
-interface CreateReceipt {
-  transaction: Omit<Transaction, 'id' | 'type'>
-  receipt: Omit<Receipt, 'id' | 'transactionId' | 'transaction'>
+type CreateReceipt = {
+  transaction: {
+    userId: string
+    groupId?: string | null
+    categoryId?: string | null
+    description?: string | null
+  }
+  receipt: {
+    receivedAt?: Date
+    scheduledDate: Date
+    amount: number
+    status: ReceiptStatus
+    receiptMethod?: ReceiptMethodType
+  }
+}
+
+type UpdateReceipt = {
+  transaction: Partial<CreateReceipt['transaction']> & {
+    id: string
+  }
+  receipt: Partial<CreateReceipt['receipt']> & {
+    id: string
+  }
 }
 
 interface FindAllParameters {
@@ -24,17 +44,17 @@ export async function create(params: CreateReceipt) {
       prisma.transaction.create({
         data: {
           type: 'RECEIPT',
-          amount: params.transaction.amount ?? 0,
           categoryId: params.transaction.categoryId,
-          description: params.transaction.description ?? '-',
+          description: params.transaction.description,
           groupId: params.transaction.groupId,
           userId: params.transaction.userId,
         },
       }),
       prisma.receipt.create({
         data: {
-          receiptDate: params.receipt.receiptDate,
-          amountReceived: params.receipt.amountReceived,
+          receivedAt: params.receipt.receivedAt,
+          scheduledDate: params.receipt.scheduledDate,
+          amount: params.receipt.amount,
           status: params.receipt.status,
           receiptMethod: params.receipt.receiptMethod,
           transactionId: undefined,
@@ -47,75 +67,6 @@ export async function create(params: CreateReceipt) {
       data: { transactionId: transaction.id },
     })
   }, 'Recebimento criado com sucesso')
-}
-
-export async function edit(
-  receiptId: string,
-  data: Partial<Receipt>,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.receipt.update({
-      where: {
-        id: receiptId,
-        AND: [{ OR: [{ transaction: { userId, groupId } }] }],
-      },
-      data,
-    })
-  }, 'Recebimento editado com sucesso')
-}
-
-export async function confirm(
-  receiptId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.receipt.update({
-      where: {
-        id: receiptId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      data: { status: 'RECEIVED' },
-    })
-  }, 'Recebimento confirmado com sucesso')
-}
-
-export async function cancel(
-  receiptId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.receipt.update({
-      where: {
-        id: receiptId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      data: { status: 'CANCELLED' },
-    })
-  }, 'Recebimento cancelado com sucesso')
-}
-
-export async function findUnique(
-  receiptId: string,
-  userId?: string,
-  groupId?: string | null,
-) {
-  return handleDatabaseOperation(async () => {
-    return await prisma.receipt.findUnique({
-      where: {
-        id: receiptId,
-        AND: { OR: [{ transaction: { userId, groupId } }] },
-      },
-      include: {
-        transaction: {
-          include: { category: true },
-        },
-      },
-    })
-  }, 'Recebimento encontrado com sucesso')
 }
 
 export async function findAll(params: FindAllParameters) {
@@ -148,28 +99,69 @@ export async function findAll(params: FindAllParameters) {
   }, 'Busca realizada com sucesso')
 }
 
-export async function destroy(
+export async function findUnique(
   receiptId: string,
   userId?: string,
   groupId?: string | null,
 ) {
   return handleDatabaseOperation(async () => {
-    const receipt = await findUnique(receiptId, userId, groupId)
+    return await prisma.receipt.findUnique({
+      where: {
+        id: receiptId,
+        AND: { OR: [{ transaction: { userId, groupId } }] },
+      },
+      include: {
+        transaction: {
+          include: { category: true },
+        },
+      },
+    })
+  }, 'Recebimento encontrado com sucesso')
+}
 
-    if (!receipt?.data?.transactionId) {
-      throw new Error('Recebimento não encontrado')
-    }
+export async function findByTransaction(
+  transactionId: string,
+  userId?: string,
+  groupId?: string | null,
+) {
+  return handleDatabaseOperation(async () => {
+    return await prisma.receipt.findFirst({
+      where: {
+        transactionId,
+        AND: { OR: [{ transaction: { userId, groupId } }] },
+      },
+    })
+  }, 'Busca realizada com sucesso')
+}
 
-    return prisma.$transaction([
-      prisma.receipt.delete({
-        where: {
-          id: receiptId,
-          AND: [{ OR: [{ transaction: { userId, groupId } }] }],
+export async function update(params: UpdateReceipt) {
+  return handleDatabaseOperation(async () => {
+    await prisma.$transaction([
+      prisma.transaction.update({
+        where: { id: params.transaction.id },
+        data: {
+          categoryId: params.transaction.categoryId,
+          description: params.transaction.description,
+          groupId: params.transaction.groupId,
+          receipts: {
+            update: {
+              where: {
+                id: params.receipt.id,
+                transactionId: params.transaction.id,
+              },
+              data: {
+                receivedAt: params.receipt.receivedAt,
+                scheduledDate: params.receipt.scheduledDate,
+                amount: params.receipt.amount,
+                status: params.receipt.status,
+                receiptMethod: params.receipt.receiptMethod,
+              },
+            },
+          },
         },
       }),
-      prisma.transaction.delete({
-        where: { id: receipt.data.transactionId },
-      }),
     ])
-  }, 'Recebimento deletado com sucesso')
+  }, 'Pagamento atualizado com sucesso')
 }
+
+export async function updateInBatch() {}
