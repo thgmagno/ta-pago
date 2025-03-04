@@ -2,6 +2,13 @@ import { Category, CategoryType } from '@prisma/client'
 import { prisma } from '@/database/prisma'
 import { handleDatabaseOperation } from '@/database/helper'
 
+type CreatePayment = {
+  name: string
+  type: CategoryType
+  userId: string
+  groupId?: string | null
+}
+
 type UpdateCategory = {
   category: Partial<Category> & {
     id: string
@@ -10,7 +17,7 @@ type UpdateCategory = {
   }
 }
 
-export async function create(category: Category) {
+export async function create(category: CreatePayment) {
   return handleDatabaseOperation(async () => {
     return await prisma.category.create({ data: category })
   }, 'Categoria criada com sucesso')

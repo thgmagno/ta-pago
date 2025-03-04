@@ -1,5 +1,6 @@
 export interface PaymentFormState {
   errors: {
+    id?: string[]
     description?: string[]
     amount?: string[]
     categoryId?: string[]
@@ -13,6 +14,7 @@ export interface PaymentFormState {
 
 export interface ReceiptFormState {
   errors: {
+    id?: string[]
     description?: string[]
     amount?: string[]
     categoryId?: string[]
@@ -26,6 +28,7 @@ export interface ReceiptFormState {
 
 export interface ReserveFormState {
   errors: {
+    id?: string[]
     description?: string[]
     amount?: string[]
     categoryId?: string[]

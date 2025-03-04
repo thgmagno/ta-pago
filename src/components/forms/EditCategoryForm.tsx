@@ -7,7 +7,7 @@ import { Category } from '@prisma/client'
 
 export function EditCategoryForm({ category }: { category?: Category }) {
   const [formState, action, isPending] = useActionState(
-    actions.categories.category.create,
+    actions.categories.category.update,
     { errors: {} },
   )
 

@@ -9,19 +9,30 @@ import { z } from 'zod'
 
 // Validação para Payment
 export const PaymentSchema = z.object({
-  id: z.string().cuid().optional(),
+  id: z.string().optional(),
   description: z.string().optional(),
   amount: z
     .string()
     .min(1, { message: 'O valor é obrigatório' })
-    .refine((val) => !isNaN(Number(val)), {
-      message: 'O valor deve ser um número',
-    })
-    .transform((val) => Number(val))
+    .transform((val) =>
+      Number(
+        val
+          .replace(/\./g, '')
+          .replace(/[^\d,.-]/g, '')
+          .replace(',', '.'),
+      ),
+    )
+    .refine((val) => !isNaN(val), { message: 'O valor deve ser um número' })
     .refine((val) => val > 0, { message: 'O valor deve ser maior que zero' }),
   categoryId: z.string().optional(),
-  paidAt: z.date({ message: 'A data de pagamento é inválida' }).optional(),
-  scheduledDate: z.date({ message: 'A data de vencimento é obrigatória' }),
+  paidAt: z
+    .string()
+    .transform((val) => (val ? new Date(val) : undefined))
+    .pipe(z.date().optional()),
+  scheduledDate: z
+    .string()
+    .transform((val) => new Date(val))
+    .pipe(z.date()),
   paymentMethod: z
     .enum(
       [...Object.values(PaymentMethodType)] as [
@@ -39,18 +50,21 @@ export const PaymentSchema = z.object({
 
 // Validação para Receipt
 export const ReceiptSchema = z.object({
-  id: z.string().cuid().optional(),
+  id: z.string().optional(),
   description: z.string().optional(),
   amount: z
     .string()
     .min(1, { message: 'O valor é obrigatório' })
-    .refine((val) => !isNaN(Number(val)), {
-      message: 'O valor deve ser um número',
-    })
-    .transform((val) => Number(val))
-    .refine((val) => val > 0, {
-      message: 'O valor deve ser maior que zero',
-    }),
+    .transform((val) =>
+      Number(
+        val
+          .replace(/\./g, '')
+          .replace(/[^\d,.-]/g, '')
+          .replace(',', '.'),
+      ),
+    )
+    .refine((val) => !isNaN(val), { message: 'O valor deve ser um número' })
+    .refine((val) => val > 0, { message: 'O valor deve ser maior que zero' }),
   categoryId: z.string().optional(),
   receivedAt: z
     .date({ message: 'A data de recebimento é inválida' })
@@ -74,18 +88,16 @@ export const ReceiptSchema = z.object({
 // Validação para Reserve
 export const ReserveSchema = z
   .object({
-    id: z.string().cuid().optional(),
+    id: z.string().optional(),
     description: z.string().optional(),
     amount: z
       .string()
       .min(1, { message: 'O valor é obrigatório' })
-      .refine((val) => !isNaN(Number(val)), {
-        message: 'O valor deve ser um número',
-      })
-      .transform((val) => Number(val))
-      .refine((val) => val > 0, {
-        message: 'O valor deve ser maior que zero',
-      }),
+      .transform((val) =>
+        Number(val.replace(/[^\d,.-]/g, '').replace(',', '.')),
+      )
+      .refine((val) => !isNaN(val), { message: 'O valor deve ser um número' })
+      .refine((val) => val > 0, { message: 'O valor deve ser maior que zero' }),
     categoryId: z.string().optional(),
     yield: z
       .string()

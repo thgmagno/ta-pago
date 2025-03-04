@@ -54,11 +54,14 @@ export function ReceiptForm({
   return (
     <form action={action}>
       <div className="grid w-full items-center gap-4">
+        {/* ID */}
+        <input type="hidden" name="id" value={receipt?.id} />
+
         {/* Description */}
         <div className="flex flex-col space-y-2">
           <Label>Descrição</Label>
           <Input
-            id="description"
+            name="description"
             placeholder="Descrição do pagamento (opcional)"
             defaultValue={receipt?.transaction?.description ?? ''}
           />
@@ -96,7 +99,7 @@ export function ReceiptForm({
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Categoria</Label>
             <Select
-              name="category"
+              name="categoryId"
               defaultValue={receipt?.transaction?.categoryId ?? ''}
             >
               <SelectTrigger>

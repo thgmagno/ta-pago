@@ -43,6 +43,9 @@ export function CategoryForm({
   return (
     <form action={action}>
       <div className="grid w-full items-center gap-4">
+        {/* ID */}
+        <input type="hidden" name="id" value={category?.id} />
+
         {/* Tipo */}
         <div className="flex flex-col space-y-2">
           <Label>Tipo</Label>

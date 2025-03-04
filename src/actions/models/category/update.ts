@@ -44,5 +44,5 @@ export async function update(
   }
 
   revalidatePath('/')
-  redirect('/financas/pagamentos')
+  redirect('/financas/categorias')
 }

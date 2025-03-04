@@ -13,6 +13,9 @@ export async function create(
 ): Promise<PaymentFormState> {
   const parsed = PaymentSchema.safeParse(Object.fromEntries(formData.entries()))
 
+  console.log(formData)
+  console.log(parsed.data)
+
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors }
   }
