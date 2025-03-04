@@ -1,6 +1,6 @@
 export default function GroupPage() {
   return (
-    <section>
+    <section className="page">
       <p>GroupPage</p>
     </section>
   )

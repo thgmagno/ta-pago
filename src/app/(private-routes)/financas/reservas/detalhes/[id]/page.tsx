@@ -1,4 +1,5 @@
 import { buttonVariants } from '@/components/ui/button'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 export default async function DetailsReservePage({
@@ -9,15 +10,16 @@ export default async function DetailsReservePage({
   const id = (await params).id
 
   return (
-    <section>
-      <div className="flex items-center justify-end">
-        <Link
-          href="/financas/reservas"
-          className={buttonVariants({ variant: 'outline', size: 'sm' })}
-        >
-          Voltar
-        </Link>
-      </div>
+    <section className="page">
+      <Link
+        href="/financas/reservas"
+        className={clsx(
+          'ml-auto',
+          buttonVariants({ variant: 'outline', size: 'sm' }),
+        )}
+      >
+        Voltar
+      </Link>
       <p>Reserve {id}</p>
     </section>
   )

@@ -11,8 +11,7 @@ export default async function EditPaymentPage({
   const category = await actions.categories.category.findUnique(id)
 
   return (
-    <section>
-      <span>Editar categoria</span>
+    <section className="page">
       <CardWithForm>
         <EditCategoryForm category={category} />
       </CardWithForm>

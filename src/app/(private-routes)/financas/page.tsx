@@ -26,15 +26,15 @@ export default function FinancePage() {
   ]
 
   return (
-    <section>
-      <div className="flex flex-col">
+    <section className="page">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {items.map((item) => (
           <Link
             key={item.url}
             href={item.url}
-            className="hover:text-emerald-500 hover:underline"
+            className="bg-sidebar m-2 flex flex-col items-center justify-center gap-4 rounded-xl border px-3 py-6 transition-all duration-200 not-hover:opacity-75 hover:scale-102"
           >
-            {item.title}
+            <item.icon className="mr-2" /> {item.title}
           </Link>
         ))}
       </div>

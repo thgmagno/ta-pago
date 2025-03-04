@@ -20,8 +20,7 @@ export default async function EditReceiptPage({
   }
 
   return (
-    <section>
-      <span>Editar recebimento</span>
+    <section className="page">
       <CardWithForm>
         <EditReceiptForm receipt={receipt} />
       </CardWithForm>

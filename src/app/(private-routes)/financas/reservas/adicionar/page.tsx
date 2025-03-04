@@ -3,8 +3,7 @@ import { CardWithForm } from '@/components/forms/CardForm'
 
 export default async function AddReservePage() {
   return (
-    <section>
-      <span>Adicionar reserva</span>
+    <section className="page">
       <CardWithForm>
         <AddReserveForm />
       </CardWithForm>

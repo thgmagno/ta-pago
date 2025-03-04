@@ -1,6 +1,6 @@
 export default function () {
   return (
-    <section>
+    <section className="page">
       <p>SupportPage</p>
     </section>
   )

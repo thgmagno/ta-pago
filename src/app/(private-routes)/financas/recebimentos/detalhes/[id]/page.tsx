@@ -1,4 +1,5 @@
 import { buttonVariants } from '@/components/ui/button'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 export default async function DetailsReceiptPage({
@@ -9,15 +10,16 @@ export default async function DetailsReceiptPage({
   const id = (await params).id
 
   return (
-    <section>
-      <div className="flex items-center justify-end">
-        <Link
-          href="/financas/recebimentos"
-          className={buttonVariants({ variant: 'outline', size: 'sm' })}
-        >
-          Voltar
-        </Link>
-      </div>
+    <section className="page">
+      <Link
+        href="/financas/recebimentos"
+        className={clsx(
+          'ml-auto',
+          buttonVariants({ variant: 'outline', size: 'sm' }),
+        )}
+      >
+        Voltar
+      </Link>
       <p>Receipt {id}</p>
     </section>
   )

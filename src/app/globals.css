@@ -121,6 +121,6 @@
     @apply bg-background text-foreground;
   }
   .page {
-    @apply flex flex-col space-y-6
+    @apply flex flex-col space-y-6 mb-32 p-3 md:p-5
   }
 }

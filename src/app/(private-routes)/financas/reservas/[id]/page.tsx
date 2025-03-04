@@ -20,8 +20,7 @@ export default async function EditReservePage({
   }
 
   return (
-    <section>
-      <span>Editar reserva</span>
+    <section className="page">
       <CardWithForm>
         <EditReserveForm reserve={reserve} />
       </CardWithForm>

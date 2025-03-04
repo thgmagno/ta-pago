@@ -4,7 +4,7 @@ export default async function IndexPage() {
   const user = await auth().then((session) => session?.user)
 
   return (
-    <section>
+    <section className="page">
       <h2 className="text-muted-foreground text-lg font-semibold md:text-xl">
         {getUserName(user?.name)}
       </h2>

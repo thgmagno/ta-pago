@@ -3,8 +3,7 @@ import { CardWithForm } from '@/components/forms/CardForm'
 
 export default async function AddPaymentPage() {
   return (
-    <section>
-      <span>Categoria categoria</span>
+    <section className="page">
       <CardWithForm>
         <AddCategoryForm />
       </CardWithForm>

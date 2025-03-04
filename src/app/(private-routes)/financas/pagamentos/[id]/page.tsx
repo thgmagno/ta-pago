@@ -20,8 +20,7 @@ export default async function EditPaymentPage({
   }
 
   return (
-    <section>
-      <span>Editar pagamento</span>
+    <section className="page">
       <CardWithForm>
         <EditPaymentForm payment={payment} />
       </CardWithForm>

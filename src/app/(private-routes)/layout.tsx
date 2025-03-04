@@ -1,4 +1,5 @@
 import { AppSidebar } from '@/components/AppSidebar'
+import { Breadcrumb } from '@/components/Breadcrumb'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 
 export default async function PrivateLayout({
@@ -11,7 +12,8 @@ export default async function PrivateLayout({
       <AppSidebar />
       <div className="w-full">
         <SidebarTrigger />
-        <section className="mb-32 p-3 md:p-5">{children}</section>
+        <Breadcrumb />
+        {children}
       </div>
     </SidebarProvider>
   )
