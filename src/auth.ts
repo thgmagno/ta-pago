@@ -6,7 +6,12 @@ import { env } from 'root/env'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [Google],
+  providers: [
+    Google({
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
+    }),
+  ],
   session: {
     strategy: 'jwt',
   },
@@ -28,6 +33,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.groupId = (token.groupId as string) ?? null
       }
       return session
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl
     },
   },
 })
