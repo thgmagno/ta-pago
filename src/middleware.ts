@@ -12,7 +12,12 @@ export default async function middleware(request: NextRequest) {
   )
 
   const token = await getToken({ req: request, secret: env.AUTH_SECRET })
-  const isAuthenticated = Boolean(token?.email && token?.sub)
+  const isAuthenticated = Boolean(token?.email && token.sub)
+
+  console.log(`DEBUG | TOKEN | ${token}`)
+  console.log(`DEBUG | EMAIL | ${token?.email}`)
+  console.log(`DEBUG | SUB | ${token?.sub}`)
+  console.log(`DEBUG | AUTH_URL | ${env.AUTH_URL}`)
 
   if (isPrivateRoute) {
     if (!isAuthenticated) {
