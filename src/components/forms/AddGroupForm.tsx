@@ -17,7 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { HelperTooltip } from '../HelperTooltip'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 export function AddGroupForm() {
   const [formState, action, isPending] = useActionState(
@@ -73,16 +78,7 @@ export function GroupForm({
 
         {/* Visibilidade */}
         <div className="flex flex-col space-y-2">
-          <Label className="flex items-center">
-            Visibilidade{' '}
-            <HelperTooltip
-              title="Visibilidade"
-              text="Grupos públicos aparecem nas buscas e podem ser encontrados por
-            outros usuários, mas só podem ser acessados por membros. Grupos
-            privados não aparecem em buscas e só podem ser acessados por membros
-            convidados."
-            />
-          </Label>
+          <Label className="flex items-center">Visibilidade</Label>
           <Select name="visibility" defaultValue={group?.visibility ?? ''}>
             <SelectTrigger>
               <SelectValue placeholder="Selecionar a visibilidade" />
@@ -100,6 +96,23 @@ export function GroupForm({
             </SelectContent>
           </Select>
           <ErrorMessageForm message={formState.errors.visibility} />
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-muted-foreground">
+                Como funciona a visibilidade?
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col space-y-2 text-sm">
+                <span>
+                  <b>Grupos públicos: </b>aparecem nas buscas e podem ser
+                  encontrados por outros usuários.
+                </span>
+                <span>
+                  <b>Grupos privados: </b>não aparecem em buscas e só podem ser
+                  acessados por membros convidados.
+                </span>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
       <CardWithFooter onCancelRedirectTo="/grupo" isPending={isPending} />

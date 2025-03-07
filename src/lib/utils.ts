@@ -15,11 +15,10 @@ export function redirectIfInvalidId(id?: string | null, redirectUrl = '/') {
 }
 
 export function formatCurrencyBRL(amount?: number | null) {
-  if (!amount) return null
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(amount)
+  }).format(amount ?? 0)
 }
 
 export function formatDateBR(date?: Date | null) {

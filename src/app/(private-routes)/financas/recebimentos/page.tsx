@@ -12,10 +12,7 @@ export default async function ReceiptsPage() {
     <section className="page">
       <Link
         href="/financas/recebimentos/adicionar"
-        className={clsx(
-          'ml-auto',
-          buttonVariants({ variant: 'outline' }),
-        )}
+        className={clsx('ml-auto', buttonVariants({ variant: 'outline' }))}
       >
         Adicionar
       </Link>

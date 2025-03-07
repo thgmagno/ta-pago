@@ -22,6 +22,9 @@ import { dict } from '@/lib/dict'
 import { ReserveFormState } from '@/lib/states/transactions'
 import { ReservationComplete } from '@/lib/types'
 import { Category } from '@prisma/client'
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
 
 export function AddReserveForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -117,10 +120,10 @@ export function ReserveForm({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 lg:flex-row">
-          {/* categoryId */}
-          <div className="flex flex-1 flex-col space-y-2">
-            <Label>Categoria</Label>
+        {/* categoryId */}
+        <div className="flex flex-1 flex-col space-y-2">
+          <Label>Categoria</Label>
+          <div className="flex items-center gap-2">
             <Select
               name="categoryId"
               defaultValue={reserve?.transaction?.categoryId ?? ''}
@@ -140,31 +143,38 @@ export function ReserveForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <ErrorMessageForm message={formState.errors.categoryId} />
+            <Link
+              href="/financas/categorias/adicionar"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              <Plus className="h-5 w-5 md:hidden" />
+              <span className="hidden md:inline-flex">Adicionar</span>
+            </Link>
           </div>
+          <ErrorMessageForm message={formState.errors.categoryId} />
+        </div>
 
-          {/* status */}
-          <div className="flex flex-1 flex-col space-y-2">
-            <Label>Status</Label>
-            <Select name="status" defaultValue={reserve?.status}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecionar status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Status</SelectLabel>
-                  {dict.ReserveStatus.sort((a, b) =>
-                    a.label.localeCompare(b.label),
-                  ).map((method) => (
-                    <SelectItem key={method.value} value={method.value}>
-                      {method.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <ErrorMessageForm message={formState.errors.status} />
-          </div>
+        {/* status */}
+        <div className="flex flex-1 flex-col space-y-2">
+          <Label>Status</Label>
+          <Select name="status" defaultValue={reserve?.status}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecionar status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Status</SelectLabel>
+                {dict.ReserveStatus.sort((a, b) =>
+                  a.label.localeCompare(b.label),
+                ).map((method) => (
+                  <SelectItem key={method.value} value={method.value}>
+                    {method.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <ErrorMessageForm message={formState.errors.status} />
         </div>
       </div>
       <CardWithFooter

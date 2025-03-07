@@ -13,7 +13,6 @@ import { Separator } from '@/components/ui/separator'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { TransactionDetailsManager } from '@/components/TransactionDetailsManager'
-import { Badge } from '@/components/ui/badge'
 
 export default async function DetailsPaymentPage(props: {
   searchParams: SearchParams
@@ -24,28 +23,17 @@ export default async function DetailsPaymentPage(props: {
     redirectIfInvalidId(searchParams.id, baseUrl),
   )
   const editUrl = `/financas/pagamentos/editar?id=${payment.id}`
-  const isExcluded = payment.transaction?.deletedAt !== null
 
   return (
     <section className="page">
       <Link
         href={baseUrl}
-        className={clsx(
-          'ml-auto',
-          buttonVariants({ variant: 'outline' }),
-        )}
+        className={clsx('ml-auto', buttonVariants({ variant: 'outline' }))}
       >
         Voltar
       </Link>
-      <CardWithForm className={clsx({ 'ring ring-red-900/80': isExcluded })}>
+      <CardWithForm>
         <form className="flex flex-col space-y-2.5 opacity-95">
-          {/* Excluído */}
-          {isExcluded && (
-            <div className="mb-8 grid grid-cols-4 items-center gap-4">
-              <Badge variant="destructive">Excluído</Badge>
-            </div>
-          )}
-
           {/* Tipo */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="font-semibold">Tipo:</Label>
@@ -100,21 +88,6 @@ export default async function DetailsPaymentPage(props: {
             </p>
           </div>
 
-          {/* Data da exclusão */}
-          {isExcluded && (
-            <>
-              <Separator />
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="font-semibold">Data da exclusão:</Label>
-                <p>
-                  {payment?.transaction?.deletedAt
-                    ? formatDateBR(payment?.transaction?.deletedAt)
-                    : '-'}
-                </p>
-              </div>
-            </>
-          )}
-
           <Separator />
 
           {/* Valor */}
@@ -155,7 +128,6 @@ export default async function DetailsPaymentPage(props: {
           <TransactionDetailsManager
             transactionId={payment.transaction.id}
             editUrl={editUrl}
-            isExcluded={isExcluded}
           />
         )}
       </CardWithForm>

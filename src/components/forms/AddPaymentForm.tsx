@@ -21,6 +21,9 @@ import { dict } from '@/lib/dict'
 import { PaymentFormState } from '@/lib/states/transactions'
 import { PaymentComplete } from '@/lib/types'
 import { Category } from '@prisma/client'
+import Link from 'next/link'
+import { Plus } from 'lucide-react'
+import { buttonVariants } from '@/components/ui/button'
 
 export function AddPaymentForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -94,10 +97,10 @@ export function PaymentForm({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 lg:flex-row">
-          {/* categoryId */}
-          <div className="flex flex-1 flex-col space-y-2">
-            <Label>Categoria</Label>
+        {/* categoryId */}
+        <div className="flex flex-1 flex-col space-y-2">
+          <Label>Categoria</Label>
+          <div className="flex items-center gap-2">
             <Select
               name="categoryId"
               defaultValue={payment?.transaction?.categoryId ?? ''}
@@ -117,9 +120,18 @@ export function PaymentForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <ErrorMessageForm message={formState.errors.categoryId} />
+            <Link
+              href="/financas/categorias/adicionar"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              <Plus className="h-5 w-5 md:hidden" />
+              <span className="hidden md:inline-flex">Adicionar</span>
+            </Link>
           </div>
+          <ErrorMessageForm message={formState.errors.categoryId} />
+        </div>
 
+        <div className="flex flex-col gap-2 lg:flex-row">
           {/* paymentMethod */}
           <div className="flex flex-1 flex-col space-y-2">
             <Label>Método</Label>
