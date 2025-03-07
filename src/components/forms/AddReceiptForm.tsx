@@ -21,9 +21,9 @@ import { dict } from '@/lib/dict'
 import { ReceiptFormState } from '@/lib/states/transactions'
 import { ReceiptComplete } from '@/lib/types'
 import { Category } from '@prisma/client'
-import Link from 'next/link'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export function AddReceiptForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -54,6 +54,12 @@ export function ReceiptForm({
   receipt?: ReceiptComplete
   categories: Category[]
 }) {
+  const { replace } = useRouter()
+  const onClickAddCategory = () => {
+    localStorage.setItem('categoryReferer', '/financas/recebimentos/adicionar')
+    replace('/financas/categorias/adicionar')
+  }
+
   return (
     <form action={action}>
       <div className="grid w-full items-center gap-4">
@@ -120,13 +126,14 @@ export function ReceiptForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Link
-              href="/financas/categorias/adicionar"
-              className={buttonVariants({ variant: 'outline' })}
+            <Button
+              onClick={onClickAddCategory}
+              type="button"
+              variant="outline"
             >
               <Plus className="h-5 w-5 md:hidden" />
               <span className="hidden md:inline-flex">Adicionar</span>
-            </Link>
+            </Button>
           </div>
           <ErrorMessageForm message={formState.errors.categoryId} />
         </div>

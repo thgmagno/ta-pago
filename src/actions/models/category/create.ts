@@ -37,5 +37,5 @@ export async function create(
   }
 
   revalidatePath('/')
-  redirect('/financas/categorias')
+  redirect(parsed.data.referer)
 }

@@ -22,9 +22,9 @@ import { dict } from '@/lib/dict'
 import { ReserveFormState } from '@/lib/states/transactions'
 import { ReservationComplete } from '@/lib/types'
 import { Category } from '@prisma/client'
-import Link from 'next/link'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export function AddReserveForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -56,6 +56,11 @@ export function ReserveForm({
   categories: Category[]
 }) {
   const [indeterminate, setIndeterminate] = useState(!reserve?.endDate)
+  const { replace } = useRouter()
+  const onClickAddCategory = () => {
+    localStorage.setItem('categoryReferer', '/financas/reservas/adicionar')
+    replace('/financas/categorias/adicionar')
+  }
 
   return (
     <form action={action}>
@@ -143,13 +148,14 @@ export function ReserveForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Link
-              href="/financas/categorias/adicionar"
-              className={buttonVariants({ variant: 'outline' })}
+            <Button
+              onClick={onClickAddCategory}
+              type="button"
+              variant="outline"
             >
               <Plus className="h-5 w-5 md:hidden" />
               <span className="hidden md:inline-flex">Adicionar</span>
-            </Link>
+            </Button>
           </div>
           <ErrorMessageForm message={formState.errors.categoryId} />
         </div>

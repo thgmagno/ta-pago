@@ -12,4 +12,9 @@ export const CategorySchema = z.object({
     [...Object.values(CategoryType)] as [CategoryType, ...CategoryType[]],
     { message: 'O tipo da categoria é inválido' },
   ),
+  referer: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => val || '/financas/categorias'),
 })

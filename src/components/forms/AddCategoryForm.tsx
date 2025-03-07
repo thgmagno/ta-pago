@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { actions } from '@/actions'
 import { Category } from '@prisma/client'
 import { CategoryFormState } from '@/lib/states/categories'
@@ -40,9 +40,23 @@ export function CategoryForm({
   isPending: boolean
   category?: Category
 }) {
+  const [referer, setReferer] = useState('/financas/categorias')
+
+  useEffect(() => {
+    const storagedReferer = localStorage.getItem('categoryReferer')
+    if (storagedReferer) {
+      setReferer(storagedReferer)
+    }
+    return () => {
+      localStorage.removeItem('categoryReferer')
+    }
+  }, [])
+
   return (
     <form action={action}>
       <div className="grid w-full items-center gap-4">
+        <input type="hidden" name="referer" value={referer} />
+
         {/* ID */}
         <input type="hidden" name="id" value={category?.id} />
 
@@ -82,10 +96,7 @@ export function CategoryForm({
           <ErrorMessageForm message={formState.errors.name} />
         </div>
       </div>
-      <CardWithFooter
-        onCancelRedirectTo="/financas/categorias"
-        isPending={isPending}
-      />
+      <CardWithFooter onCancelRedirectTo={referer} isPending={isPending} />
     </form>
   )
 }
