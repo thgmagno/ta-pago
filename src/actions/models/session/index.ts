@@ -42,9 +42,9 @@ export async function getServerSession<
 }
 
 export async function loginWithGoogle() {
-  return signIn('google')
+  return signIn('google', { redirectTo: '/' })
 }
 
 export async function signOutAndRedirect() {
-  return signOut().then(redirect('/entrar'))
+  return signOut({ redirectTo: '/entrar' })
 }
