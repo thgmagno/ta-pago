@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import React from 'react'
+import { Button } from './ui/button'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -96,9 +97,10 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       {table.getFilteredSelectedRowModel().rows.length > 0 && (
-        <div className="text-muted-foreground mt-3 ml-1 flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} de{' '}
-          {table.getFilteredRowModel().rows.length} linhas(s) selecionadas.
+        <div className="mt-3 ml-1 flex">
+          <Button variant="outline" size="sm">
+            Atualizar em lote
+          </Button>
         </div>
       )}
     </div>
