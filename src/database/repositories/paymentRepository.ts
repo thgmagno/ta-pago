@@ -76,8 +76,11 @@ export async function findAll(params: FindAllParameters) {
       where: {
         transaction: {
           type: 'PAYMENT',
-          deletedAt: params.displayExcludeds ? { not: null } : null,
-          OR: [{ userId: params.userId }, { groupId: params.groupId }],
+          deletedAt: null,
+          AND: [
+            { userId: params.userId },
+            { OR: [{ groupId: params.groupId }, { userId: params.userId }] },
+          ],
         },
         paidAt: {
           gte: params.paidAtFrom || undefined,

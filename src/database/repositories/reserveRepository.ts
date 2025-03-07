@@ -78,7 +78,10 @@ export async function findAll(params: FindAllParameters) {
         transaction: {
           type: 'RESERVATION',
           deletedAt: null,
-          OR: [{ userId: params.userId }, { groupId: params.groupId }],
+          AND: [
+            { userId: params.userId },
+            { OR: [{ groupId: params.groupId }, { userId: params.userId }] },
+          ],
         },
         startDate: {
           gte: params.startDateFrom || undefined,
