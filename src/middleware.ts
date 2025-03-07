@@ -6,13 +6,22 @@ const publicRoutes = ['/apoiar', '/entrar', '/sobre']
 
 export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
+
+  const isPrivateRoute = Object.values(publicRoutes).every(
+    (route) => !pathname.includes(route),
+  )
 
   const token = await getToken({ req: request, secret: env.AUTH_SECRET })
   const isAuthenticated = Boolean(token?.email && token.sub)
 
-  if (!isPublicRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL(`/entrar`, request.url))
+  if (isPrivateRoute) {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL(`/entrar`, request.url))
+    }
+  }
+
+  if (!isPrivateRoute && isAuthenticated) {
+    return NextResponse.redirect(new URL(`/`, request.url))
   }
 
   return NextResponse.next()
