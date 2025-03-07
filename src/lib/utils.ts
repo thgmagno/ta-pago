@@ -48,9 +48,9 @@ export const parseDate = (dateString: string): Date => {
 }
 
 export function getUserName(username?: string | null) {
-  if (!username) return 'Olá'
+  if (!username) return 'Bem-vindo!'
   const nameSplited = username.split(' ')
   const firstName = nameSplited.shift()
-  const lastName = nameSplited.slice(1).pop()
+  const lastName = nameSplited.pop()
   return `${firstName} ${lastName || ''}`.trim()
 }
