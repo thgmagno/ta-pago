@@ -5,6 +5,7 @@ import { prisma } from '@/database/prisma'
 import { env } from 'root/env'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: true,
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
