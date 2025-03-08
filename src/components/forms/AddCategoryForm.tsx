@@ -99,7 +99,7 @@ export function CategoryForm({
         </div>
       </div>
       <CardWithFooter
-        onCancelRedirectTo="/financas/pagamentos"
+        onCancelRedirectTo={referer}
         isPending={isPending}
         transactionGroupIp={category?.groupId}
         isEdition={!!category?.id}

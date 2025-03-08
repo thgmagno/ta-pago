@@ -3,11 +3,7 @@
 import { repositories } from '@/database/repositories'
 import { getServerSession } from '../session'
 
-export async function findAll({
-  displayExcludeds,
-}: {
-  displayExcludeds: boolean
-}) {
+export async function findAll() {
   const user = await getServerSession()
 
   return repositories.transactions.payment.findAll({
@@ -19,6 +15,5 @@ export async function findAll({
     userId: user.id,
     groupId: user.groupId,
     status: undefined,
-    displayExcludeds,
   })
 }

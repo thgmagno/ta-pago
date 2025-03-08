@@ -36,7 +36,6 @@ interface FindAllParameters {
   userId?: string
   groupId?: string | null
   status?: PaymentStatus
-  displayExcludeds?: boolean
 }
 
 export async function create(params: CreatePayment) {
