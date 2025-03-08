@@ -9,18 +9,12 @@ import { Crown, Users } from 'lucide-react'
 import { actions } from '@/actions'
 import { Label } from '@/components/ui/label'
 import { getServerSession } from '@/actions/models/session'
-import { CardCreateGroup } from './CardCreateGroup'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { getUserName } from '@/lib/utils'
 
-export async function CardDetailsGroup() {
+export async function CardDetailsGroup({ groupId }: { groupId: string }) {
   const user = await getServerSession()
-
-  if (!user.groupId) {
-    return <CardCreateGroup />
-  }
-
-  const response = await actions.groups.group.findGroupWithMembers(user.groupId)
+  const response = await actions.groups.group.findGroupWithMembers(groupId)
 
   const isOwner = response?.data?.group?.creatorUserId === user.id
   const listMembers = response.data?.members ?? []

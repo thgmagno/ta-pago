@@ -1,6 +1,8 @@
 'use server'
 
+import { actions } from '@/actions'
 import { auth, signIn, signOut } from '@/auth'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 type GetServerSessionReturn<T = undefined> = T extends 'id' | 'email' | 'name'
@@ -46,5 +48,8 @@ export async function loginWithGoogle() {
 }
 
 export async function signOutAndRedirect() {
+  const user = await actions.session.getServerSession()
+  const cookieStore = await cookies()
+  cookieStore.delete(`temporary-cookie-${user.id}`)
   return signOut({ redirectTo: '/entrar' })
 }

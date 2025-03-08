@@ -5,6 +5,7 @@ import { repositories } from '@/database/repositories'
 import { GroupSchema } from '@/lib/schemas/groups'
 import { GroupFormState } from '@/lib/states/groups'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function create(
@@ -20,12 +21,24 @@ export async function create(
   try {
     const user = await actions.session.getServerSession()
 
-    await repositories.groups.group.create({
+    const { data } = await repositories.groups.group.create({
       creatorUserId: user.id,
       name: parsed.data.name,
       description: parsed.data.description,
       visibility: parsed.data.visibility,
     })
+
+    if (!data) {
+      return {
+        errors: { _form: 'Erro ao criar grupo' },
+      }
+    }
+
+    const cookieStore = await cookies()
+    cookieStore.set(
+      `temporary-cookie-${user.id}`,
+      JSON.stringify({ groupId: data.groupId }),
+    )
   } catch (error) {
     if (error instanceof Error) {
       return {

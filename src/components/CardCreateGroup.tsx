@@ -6,18 +6,14 @@ import { Users } from 'lucide-react'
 
 export function CardCreateGroup() {
   return (
-    <Card className="max-w-lg rounded-2xl border p-4 shadow-md">
+    <Card className="mb-0 max-h-fit max-w-lg rounded-2xl border p-4 pb-8 shadow-md">
       <CardHeader className="flex flex-row items-center gap-3">
         <Users className="text-primary h-8 w-8" />
-        <CardTitle className="text-lg font-semibold">
-          Compartilhe suas finanças com um grupo
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold">Criar um grupo</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground text-sm">
-          Criar um grupo é ideal para gerenciar gastos compartilhados com
-          amigos, familiares ou colegas. Acompanhe todas as transações em um só
-          lugar!
+          Acompanhe todas as transações em um só lugar!
         </p>
         <Link
           href={'/grupo/criar'}

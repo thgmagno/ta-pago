@@ -7,11 +7,9 @@ export default function SettingsPage() {
   return (
     <section className="page">
       <p>SettingsPage</p>
-      <div>
-        <Button onClick={actions.session.signOutAndRedirect}>
-          Encerrar sessão
-        </Button>
-      </div>
+      <form action={actions.session.signOutAndRedirect}>
+        <Button type="submit">Encerrar sessão</Button>
+      </form>
     </section>
   )
 }

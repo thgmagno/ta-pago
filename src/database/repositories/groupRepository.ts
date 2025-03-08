@@ -12,15 +12,6 @@ export async function create(
 
       const newGroup = await tx.group.create({ data: { ...group, tag } })
 
-      await tx.groupMember.create({
-        data: {
-          userId: group.creatorUserId,
-          additionDate: new Date(),
-          groupId: newGroup.id,
-          role: 'ADMIN',
-        },
-      })
-
       return await tx.user.update({
         where: { id: group.creatorUserId },
         data: { groupId: newGroup.id },
