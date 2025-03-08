@@ -1,3 +1,4 @@
+import { Payment, Receipt, Reserve } from '@prisma/client'
 import { clsx, type ClassValue } from 'clsx'
 import { formatDistance } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -53,4 +54,45 @@ export function getUserName(username?: string | null) {
   const firstName = nameSplited.shift()
   const lastName = nameSplited.pop()
   return `${firstName} ${lastName || ''}`.trim()
+}
+
+type Generic = Payment | Receipt | Reserve
+
+export function extractMonthsAndYears<T extends Generic>(transactions: T[]) {
+  const dateKey = (transaction: T) =>
+    'scheduledDate' in transaction
+      ? transaction.scheduledDate
+      : transaction.startDate
+
+  const months = Array.from(
+    new Set(
+      transactions.map((t) => dateKey(t)?.toISOString().slice(5, 7)) || [],
+    ),
+  )
+
+  const years = Array.from(
+    new Set(
+      transactions.map((t) => dateKey(t)?.toISOString().slice(0, 4)) || [],
+    ),
+  )
+
+  const currentMonth = new Date().toISOString().slice(5, 7)
+  const currentYear = new Date().toISOString().slice(0, 4)
+
+  if (!months.includes(currentMonth)) {
+    months.push(currentMonth)
+  }
+
+  if (!years.includes(currentYear)) {
+    years.push(currentYear)
+  }
+
+  months.sort((a, b) => {
+    const aMonthIndex = parseInt(a, 10) - 1
+    const bMonthIndex = parseInt(b, 10) - 1
+    return aMonthIndex - bMonthIndex
+  })
+  years.sort((a, b) => Number(a) - Number(b))
+
+  return { months, years }
 }
