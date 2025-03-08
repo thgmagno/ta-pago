@@ -83,8 +83,8 @@ export async function findAll(params: FindAllParameters) {
           ],
         },
         startDate: {
-          gte: params.startDateFrom || undefined,
-          lte: params.startDateTo || undefined,
+          gte: params.startDateFrom,
+          lte: params.startDateTo,
         },
         endDate: {
           gte: params.endDateFrom || undefined,

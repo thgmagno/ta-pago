@@ -79,3 +79,14 @@ export async function restoreTransactionExcluded(
     })
   }, 'Transação restaurada com sucesso')
 }
+
+export async function deletePermanent(transactionId: string, userId: string) {
+  return handleDatabaseOperation(async () => {
+    return await prisma.transaction.delete({
+      where: {
+        id: transactionId,
+        userId,
+      },
+    })
+  }, 'Transação excluída com sucesso')
+}

@@ -50,6 +50,7 @@ export async function loginWithGoogle() {
 export async function signOutAndRedirect() {
   const user = await actions.session.getServerSession()
   const cookieStore = await cookies()
+  cookieStore.delete('authjs.session-token')
   cookieStore.delete(`temporary-cookie-${user.id}`)
   return signOut({ redirectTo: '/entrar' })
 }

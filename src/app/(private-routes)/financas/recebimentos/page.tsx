@@ -5,11 +5,11 @@ import { buttonVariants } from '@/components/ui/button'
 import { actions } from '@/actions'
 import clsx from 'clsx'
 import { MonthYearSelector } from '@/components/MonthYearSelector'
-import { extractMonthsAndYears } from '@/lib/utils'
 
 export default async function ReceiptsPage() {
   const transactions = await actions.transactions.receipt.findAll()
-  const { months, years } = extractMonthsAndYears(transactions.data ?? [])
+  const { months, years } =
+    await actions.transactions.transaction.getMonthsAndYears('RECEIPT')
 
   return (
     <section className="page">

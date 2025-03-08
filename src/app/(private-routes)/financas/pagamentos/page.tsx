@@ -5,11 +5,18 @@ import { buttonVariants } from '@/components/ui/button'
 import { actions } from '@/actions'
 import clsx from 'clsx'
 import { MonthYearSelector } from '@/components/MonthYearSelector'
-import { extractMonthsAndYears } from '@/lib/utils'
+import { SearchParams } from '@/lib/types'
 
-export default async function PaymentsPage() {
-  const transactions = await actions.transactions.payment.findAll()
-  const { months, years } = extractMonthsAndYears(transactions.data ?? [])
+export default async function PaymentsPage(params: SearchParams) {
+  const { month, year } = await params
+
+  const transactions = await actions.transactions.payment.findAll({
+    month,
+    year,
+  })
+
+  const { months, years } =
+    await actions.transactions.transaction.getMonthsAndYears('PAYMENT')
 
   return (
     <section className="page">

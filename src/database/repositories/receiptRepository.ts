@@ -85,8 +85,8 @@ export async function findAll(params: FindAllParameters) {
           lte: params.receivedAtTo || undefined,
         },
         scheduledDate: {
-          gte: params.scheduledDateFrom || undefined,
-          lte: params.scheduledDateTo || undefined,
+          gte: params.scheduledDateFrom,
+          lte: params.scheduledDateTo,
         },
         ...(params.status && { status: { equals: params.status } }),
       },
