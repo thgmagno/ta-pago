@@ -8,15 +8,13 @@ import {
 import { Crown, Users } from 'lucide-react'
 import { actions } from '@/actions'
 import { Label } from '@/components/ui/label'
-import { getServerSession } from '@/actions/models/session'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { getUserName } from '@/lib/utils'
 
 export async function CardDetailsGroup({ groupId }: { groupId: string }) {
-  const user = await getServerSession()
   const response = await actions.groups.group.findGroupWithMembers(groupId)
 
-  const isOwner = response?.data?.group?.creatorUserId === user.id
+  const idOwnerGroup = response?.data?.group?.creatorUserId
   const listMembers = response.data?.members ?? []
 
   return (
@@ -59,7 +57,7 @@ export async function CardDetailsGroup({ groupId }: { groupId: string }) {
                   <div className="flex flex-col">
                     <span className="flex font-medium">
                       {getUserName(member?.name)}{' '}
-                      {isOwner && (
+                      {idOwnerGroup === member.id && (
                         <Crown className="ml-3 h-5 w-5 text-amber-400" />
                       )}
                     </span>
