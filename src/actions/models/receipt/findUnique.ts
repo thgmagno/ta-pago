@@ -14,7 +14,7 @@ export async function findUnique(receiptId: string): Promise<ReceiptComplete> {
     user.groupId,
   )
 
-  if (!receipt.data) return redirect('/financas/pagamentos')
+  if (!receipt.data) return redirect('/financas/recebimentos')
 
   return receipt.data
 }

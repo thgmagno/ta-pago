@@ -24,6 +24,7 @@ import { Category } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export function AddReceiptForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -54,6 +55,7 @@ export function ReceiptForm({
   receipt?: ReceiptComplete
   categories: Category[]
 }) {
+  const { data } = useSession()
   const { replace } = useRouter()
   const onClickAddCategory = () => {
     localStorage.setItem('categoryReferer', '/financas/recebimentos/adicionar')
@@ -192,6 +194,9 @@ export function ReceiptForm({
       <CardWithFooter
         onCancelRedirectTo="/financas/recebimentos"
         isPending={isPending}
+        transactionGroupIp={receipt?.transaction?.groupId}
+        isEdition={!!receipt?.id}
+        isOwner={receipt?.transaction?.userId === data?.user.id}
       />
     </form>
   )

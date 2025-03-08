@@ -38,7 +38,7 @@ export async function update(
     await repositories.transactions.reserve.update({
       transaction: {
         id: transaction.data.id,
-        groupId: user.groupId,
+        groupId: parsed.data.isShared ? user.groupId : null,
         categoryId: parsed.data.categoryId,
         description: parsed.data.description,
       },

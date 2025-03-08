@@ -25,6 +25,7 @@ import { Category } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export function AddReserveForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -55,6 +56,7 @@ export function ReserveForm({
   reserve?: ReservationComplete
   categories: Category[]
 }) {
+  const { data } = useSession()
   const [indeterminate, setIndeterminate] = useState(!reserve?.endDate)
   const { replace } = useRouter()
   const onClickAddCategory = () => {
@@ -113,7 +115,7 @@ export function ReserveForm({
               <input
                 type="hidden"
                 name="indeterminate"
-                value={indeterminate ? 'y' : 'n'}
+                value={indeterminate ? 'true' : 'false'}
               />
               <Switch
                 id="endDate"
@@ -186,6 +188,9 @@ export function ReserveForm({
       <CardWithFooter
         onCancelRedirectTo="/financas/reservas"
         isPending={isPending}
+        transactionGroupIp={reserve?.transaction?.groupId}
+        isEdition={!!reserve?.id}
+        isOwner={reserve?.transaction?.userId === data?.user.id}
       />
     </form>
   )

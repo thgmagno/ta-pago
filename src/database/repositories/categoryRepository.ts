@@ -32,7 +32,7 @@ export async function findAll(
     return await prisma.category.findMany({
       where: {
         type,
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
       orderBy: {
         name: 'asc',
@@ -50,7 +50,7 @@ export async function findUnique(
     return await prisma.category.findUnique({
       where: {
         id: categoryId,
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
     })
   }, 'Busca realizada com sucesso')
@@ -62,7 +62,6 @@ export async function update(params: UpdateCategory) {
       where: {
         id: params.category.id,
         AND: [
-          { userId: params.category.userId },
           {
             OR: [
               { groupId: params.category.groupId },

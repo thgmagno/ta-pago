@@ -12,7 +12,7 @@ export async function findTransactionByPaymentId(
     return await prisma.transaction.findFirst({
       where: {
         payments: { some: { id: paymentId } },
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
     })
   }, 'Busca realizada com sucesso')
@@ -27,7 +27,7 @@ export async function findTransactionByReceiptId(
     return await prisma.transaction.findFirst({
       where: {
         receipts: { some: { id: receiptId } },
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
     })
   }, 'Busca realizada com sucesso')
@@ -42,7 +42,7 @@ export async function findTransactionByReserveId(
     return await prisma.transaction.findFirst({
       where: {
         reserves: { some: { id: reserveId } },
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
     })
   }, 'Busca realizada com sucesso')
@@ -57,7 +57,7 @@ export async function setExcluded(
     return await prisma.transaction.update({
       where: {
         id: transactionId,
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
       data: { deletedAt: new Date() },
     })
@@ -73,7 +73,7 @@ export async function restoreTransactionExcluded(
     return await prisma.transaction.update({
       where: {
         id: transactionId,
-        AND: [{ userId }, { OR: [{ groupId }, { userId }] }],
+        AND: [{ OR: [{ groupId }, { userId }] }],
       },
       data: { deletedAt: null },
     })

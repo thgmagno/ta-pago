@@ -16,7 +16,7 @@ export async function findUnique(
     user.groupId,
   )
 
-  if (!reserve.data) return redirect('/financas/pagamentos')
+  if (!reserve.data) return redirect('/financas/reservas')
 
   return reserve.data
 }

@@ -23,7 +23,7 @@ export async function create(
     await repositories.transactions.payment.create({
       transaction: {
         userId: user.id,
-        groupId: user.groupId,
+        groupId: parsed.data.isShared ? user.groupId : null,
         categoryId: parsed.data.categoryId,
         description: parsed.data.description,
       },

@@ -47,6 +47,11 @@ export const PaymentSchema = z.object({
     [...Object.values(PaymentStatus)] as [PaymentStatus, ...PaymentStatus[]],
     { message: 'Status de pagamento inválido' },
   ),
+  isShared: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => Boolean(val === 'true')),
 })
 
 // Validação para Receipt
@@ -88,6 +93,11 @@ export const ReceiptSchema = z.object({
     [...Object.values(ReceiptStatus)] as [ReceiptStatus, ...ReceiptStatus[]],
     { message: 'Status de recebimento inválido' },
   ),
+  isShared: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => Boolean(val === 'true')),
 })
 
 // Validação para Reserve
@@ -134,7 +144,12 @@ export const ReserveSchema = z
       .string()
       .optional()
       .nullable()
-      .transform((val) => Boolean(val === 'y')),
+      .transform((val) => Boolean(val === 'true')),
+    isShared: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => Boolean(val === 'true')),
   })
   .superRefine(({ startDate, endDate }, ctx) => {
     if (endDate && endDate < startDate) {

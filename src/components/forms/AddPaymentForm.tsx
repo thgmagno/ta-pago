@@ -24,6 +24,7 @@ import { Category } from '@prisma/client'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export function AddPaymentForm({ categories }: { categories: Category[] }) {
   const [formState, action, isPending] = useActionState(
@@ -54,6 +55,7 @@ export function PaymentForm({
   payment?: PaymentComplete
   categories: Category[]
 }) {
+  const { data } = useSession()
   const { replace } = useRouter()
   const onClickAddCategory = () => {
     localStorage.setItem('categoryReferer', '/financas/pagamentos/adicionar')
@@ -192,6 +194,9 @@ export function PaymentForm({
       <CardWithFooter
         onCancelRedirectTo="/financas/pagamentos"
         isPending={isPending}
+        transactionGroupIp={payment?.transaction?.groupId}
+        isEdition={!!payment?.id}
+        isOwner={payment?.transaction?.userId === data?.user.id}
       />
     </form>
   )

@@ -112,7 +112,6 @@ export async function findUnique(
       where: {
         id: receiptId,
         AND: [
-          { transaction: { userId } },
           { OR: [{ transaction: { groupId } }, { transaction: { userId } }] },
         ],
       },
