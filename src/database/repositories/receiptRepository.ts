@@ -77,7 +77,6 @@ export async function findAll(params: FindAllParameters) {
           type: 'RECEIPT',
           deletedAt: null,
           AND: [
-            { userId: params.userId },
             { OR: [{ groupId: params.groupId }, { userId: params.userId }] },
           ],
         },

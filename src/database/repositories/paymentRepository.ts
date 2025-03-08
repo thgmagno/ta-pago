@@ -78,7 +78,6 @@ export async function findAll(params: FindAllParameters) {
           type: 'PAYMENT',
           deletedAt: null,
           AND: [
-            { userId: params.userId },
             { OR: [{ groupId: params.groupId }, { userId: params.userId }] },
           ],
         },
