@@ -8,8 +8,8 @@ export async function findAll({
   month,
   year,
 }: {
-  month: string
-  year: string
+  month?: string | null
+  year?: string | null
 }) {
   const user = await getServerSession()
   const { scheduledDateFrom, scheduledDateTo } =

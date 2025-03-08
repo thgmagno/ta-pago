@@ -5,9 +5,21 @@ import { buttonVariants } from '@/components/ui/button'
 import { actions } from '@/actions'
 import clsx from 'clsx'
 import { MonthYearSelector } from '@/components/MonthYearSelector'
+import { SearchParams } from '@/lib/types'
 
-export default async function ReceiptsPage() {
-  const transactions = await actions.transactions.receipt.findAll()
+export default async function ReceiptsPage(props: {
+  searchParams: SearchParams
+}) {
+  const searchParams = await props.searchParams
+  const month = searchParams.mes
+  const year = searchParams.ano
+
+  const transactions = await actions.transactions.receipt.findAll({
+    month,
+    year,
+  })
+
+  // unificar chamada ao banco de dados
   const { months, years } =
     await actions.transactions.transaction.getMonthsAndYears('RECEIPT')
 

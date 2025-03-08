@@ -97,23 +97,22 @@ export async function getMonthsAndYears(type: TransactionType) {
   return { months, years }
 }
 
-export async function getScheduledDates(month: string, year: string) {
-  const scheduledDateFrom = new Date()
-  scheduledDateFrom.setUTCDate(1)
-  scheduledDateFrom.setUTCHours(0, 0, 0, 0)
+export async function getScheduledDates(
+  month?: string | null,
+  year?: string | null,
+) {
+  const currentDate = new Date()
 
-  if (typeof month === 'string' && !isNaN(parseInt(month))) {
-    scheduledDateFrom.setUTCMonth(parseInt(month) - 1)
-  }
+  const selectedYear = Number(year ?? currentDate.getFullYear())
+  const selectedMonth = Number(month ?? currentDate.getMonth() + 1)
 
-  if (typeof year === 'string' && !isNaN(parseInt(year))) {
-    scheduledDateFrom.setUTCFullYear(parseInt(year))
-  }
+  const scheduledDateFrom = new Date(
+    Date.UTC(selectedYear, selectedMonth - 1, 1, 0, 0, 0, 0),
+  )
 
-  const scheduledDateTo = new Date(scheduledDateFrom)
-  scheduledDateTo.setUTCMonth(scheduledDateFrom.getUTCMonth() + 1)
-  scheduledDateTo.setUTCDate(0)
-  scheduledDateTo.setUTCHours(23, 59, 59, 999)
+  const scheduledDateTo = new Date(
+    Date.UTC(selectedYear, selectedMonth, 0, 23, 59, 59, 999),
+  )
 
   return {
     scheduledDateFrom,
@@ -121,23 +120,21 @@ export async function getScheduledDates(month: string, year: string) {
   }
 }
 
-export async function getStartDates(month: string, year: string) {
-  const startDateFrom = new Date()
-  startDateFrom.setUTCDate(1)
-  startDateFrom.setUTCHours(0, 0, 0, 0)
+export async function getStartDates(
+  month?: string | null,
+  year?: string | null,
+) {
+  const currentDate = new Date()
 
-  if (typeof month === 'string' && !isNaN(parseInt(month))) {
-    startDateFrom.setUTCMonth(parseInt(month) - 1)
-  }
+  const selectedYear = Number(year ?? currentDate.getFullYear())
+  const selectedMonth = Number(month ?? currentDate.getMonth() + 1)
 
-  if (typeof year === 'string' && !isNaN(parseInt(year))) {
-    startDateFrom.setUTCFullYear(parseInt(year))
-  }
-
-  const startDateTo = new Date(startDateFrom)
-  startDateTo.setUTCMonth(startDateFrom.getUTCMonth() + 1)
-  startDateTo.setUTCDate(0)
-  startDateTo.setUTCHours(23, 59, 59, 999)
+  const startDateFrom = new Date(
+    Date.UTC(selectedYear, selectedMonth - 1, 1, 0, 0, 0, 0),
+  )
+  const startDateTo = new Date(
+    Date.UTC(selectedYear, selectedMonth, 0, 23, 59, 59, 999),
+  )
 
   return {
     startDateFrom,
