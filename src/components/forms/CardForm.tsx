@@ -39,11 +39,12 @@ export function CardWithFooter({
   const [isShared, setIsShared] = React.useState(
     isEdition ? !!transactionGroupIp : !!data?.user.groupId,
   )
+  const canChangeVisibility = isOwner || !isEdition
   const { replace } = useRouter()
 
   return (
     <CardFooter className="mt-5 flex flex-col justify-between lg:flex-row">
-      {isOwner && data?.user.groupId && (
+      {canChangeVisibility && (
         <div className="mb-5 w-full md:mb-0">
           <input
             type="hidden"

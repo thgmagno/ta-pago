@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useSession } from 'next-auth/react'
 
 export function AddCategoryForm() {
   const [formState, action, isPending] = useActionState(
@@ -40,6 +41,7 @@ export function CategoryForm({
   isPending: boolean
   category?: Category
 }) {
+  const { data } = useSession()
   const [referer, setReferer] = useState('/financas/categorias')
 
   useEffect(() => {
@@ -96,7 +98,13 @@ export function CategoryForm({
           <ErrorMessageForm message={formState.errors.name} />
         </div>
       </div>
-      <CardWithFooter onCancelRedirectTo={referer} isPending={isPending} />
+      <CardWithFooter
+        onCancelRedirectTo="/financas/pagamentos"
+        isPending={isPending}
+        transactionGroupIp={category?.groupId}
+        isEdition={!!category?.id}
+        isOwner={category?.userId === data?.user.id}
+      />
     </form>
   )
 }
