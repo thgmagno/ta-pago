@@ -5,7 +5,6 @@ import { prisma } from '@/database/prisma'
 import { env } from 'root/env'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  debug: true,
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
@@ -35,6 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async redirect({ url, baseUrl }) {
       return baseUrl
     },

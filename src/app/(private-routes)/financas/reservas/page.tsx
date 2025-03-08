@@ -12,10 +12,7 @@ export default async function ReservesPage() {
     <section className="page">
       <Link
         href="/financas/reservas/adicionar"
-        className={clsx(
-          'ml-auto',
-          buttonVariants({ variant: 'outline' }),
-        )}
+        className={clsx('ml-auto', buttonVariants({ variant: 'outline' }))}
       >
         Adicionar
       </Link>

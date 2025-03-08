@@ -27,10 +27,7 @@ export default async function DetailsReceiptPage(props: {
     <section className="page">
       <Link
         href={baseUrl}
-        className={clsx(
-          'ml-auto',
-          buttonVariants({ variant: 'outline' }),
-        )}
+        className={clsx('ml-auto', buttonVariants({ variant: 'outline' }))}
       >
         Voltar
       </Link>
