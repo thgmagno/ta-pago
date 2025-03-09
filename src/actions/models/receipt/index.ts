@@ -1,5 +1,5 @@
 export * from './create'
-export * from './findAll'
 export * from './findUnique'
 export * from './update'
 export * from './updateInBatch'
+export * as cached from './cached'

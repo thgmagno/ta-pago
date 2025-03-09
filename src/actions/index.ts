@@ -10,6 +10,7 @@ import * as reserve from './models/reserve'
 import * as transaction from './models/transaction'
 import * as user from './models/user'
 import * as session from './models/session'
+import * as fetcher from './fetcher'
 
 export const actions = {
   groups: {
@@ -30,4 +31,7 @@ export const actions = {
     user,
   },
   session,
+  cache: {
+    ...fetcher,
+  },
 }

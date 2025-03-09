@@ -2,20 +2,19 @@ import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/database/prisma'
-import { env } from 'root/env'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
-      clientId: env.AUTH_GOOGLE_ID,
-      clientSecret: env.AUTH_GOOGLE_SECRET,
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
   session: {
     strategy: 'jwt',
   },
-  secret: env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
   pages: {
     signIn: '/entrar',
   },

@@ -47,3 +47,11 @@ export type ReservationComplete = Reserve & {
       })
     | null
 }
+
+export type UserAuthenticated = {
+  id: string
+  email: string
+  name: string
+  image: string | null | undefined
+  groupId: string | null
+}

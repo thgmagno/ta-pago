@@ -6,6 +6,7 @@ import { actions } from '@/actions'
 import clsx from 'clsx'
 import { MonthYearSelector } from '@/components/MonthYearSelector'
 import { SearchParams } from '@/lib/types'
+import { Plus } from 'lucide-react'
 
 export default async function ReceiptsPage(props: {
   searchParams: SearchParams
@@ -14,27 +15,27 @@ export default async function ReceiptsPage(props: {
   const month = searchParams.mes
   const year = searchParams.ano
 
-  const transactions = await actions.transactions.receipt.findAll({
+  const receipts = await actions.transactions.receipt.cached.findAll({
     month,
     year,
   })
 
-  // unificar chamada ao banco de dados
   const { months, years } =
-    await actions.transactions.transaction.getMonthsAndYears('RECEIPT')
+    await actions.transactions.receipt.cached.findAllMonthsAndYears()
 
   return (
     <section className="page">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-5">
         <MonthYearSelector months={months} years={years} />
         <Link
           href="/financas/recebimentos/adicionar"
           className={clsx('ml-auto', buttonVariants({ variant: 'outline' }))}
         >
-          Adicionar
+          <Plus className="sm:hidden" />
+          <span className="hidden sm:inline-flex">Adicionar</span>
         </Link>
       </div>
-      <DataTable columns={columns} data={transactions.data ?? []} />
+      <DataTable columns={columns} data={receipts} />
     </section>
   )
 }

@@ -67,7 +67,7 @@ export function MonthYearSelector({
         value={selectedMonth ?? currentMonth}
         onValueChange={onMonthChange}
       >
-        <SelectTrigger className="w-[150px] capitalize">
+        <SelectTrigger className="w-[120px] capitalize">
           <SelectValue placeholder="Mês" />
         </SelectTrigger>
         <SelectContent>
@@ -84,7 +84,7 @@ export function MonthYearSelector({
       </Select>
 
       <Select value={selectedYear ?? currentYear} onValueChange={onYearChange}>
-        <SelectTrigger className="w-[150px]">
+        <SelectTrigger className="w-[120px]">
           <SelectValue placeholder="Ano" />
         </SelectTrigger>
         <SelectContent>

@@ -4,7 +4,8 @@ import { actions } from '@/actions'
 import { repositories } from '@/database/repositories'
 import { ReceiptSchema } from '@/lib/schemas/transactions'
 import { ReceiptFormState } from '@/lib/states/transactions'
-import { revalidatePath } from 'next/cache'
+import { tags } from '@/lib/tags'
+import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export async function create(
@@ -43,6 +44,6 @@ export async function create(
     }
   }
 
-  revalidatePath('/')
+  revalidateTag(tags.findAllReceipts)
   redirect('/financas/recebimentos')
 }
